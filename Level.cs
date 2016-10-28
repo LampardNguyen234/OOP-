@@ -226,14 +226,14 @@ namespace TowerDefenseOOP
         //LoadContent
         public void LoadContent(ContentManager Content)
         {
-            for (int k = 0; k < 5; k++)
+            for (int k = 0; k < 10; k++)
             {
                 string sTile = "tile_" + level.ToString("d2") + "_" + k.ToString("d2");
                 Texture2D tile = Content.Load<Texture2D>(sTile);
                 tileTextureList.Add(tile);
                 if (k < 5)
                 {
-                    string sRoad = "road_" + level.ToString("d2") + "_00";  
+                    string sRoad = "road_" + level.ToString("d2") + "_" + k.ToString("d2");  
                     Texture2D road = Content.Load<Texture2D>(sRoad);
                     roadTextureList.Add(road);
                 }
@@ -249,10 +249,17 @@ namespace TowerDefenseOOP
             if(map[Y,X]==0)
             {
                 if (Y < Height - 1 && X < Width - 1 && Y - 1 >= 0 && X - 1 >= 0)
-                {   
-
-                    if (map[Y - 1, X] == 1 && map[Y, X - 1] == 1 && map[Y, X + 1] == 1 && map[Y+1,X]==1)
+                {
+                    if (map[Y - 1, X] == 1 && map[Y, X - 1] == 1 && map[Y, X + 1] == 1 && map[Y + 1, X] == 1) 
                         return -6;
+                    if (map[Y - 1, X] == 1 && map[Y, X - 1] == 1 && map[Y, X + 1] == 1)
+                        return -7;
+                    if (map[Y - 1, X] == 1 && map[Y, X + 1] == 1 && map[Y + 1, X] == 1)
+                        return -8;
+                    if (map[Y, X - 1] == 1 && map[Y, X + 1] == 1 && map[Y + 1, X] == 1)
+                        return -9;
+                    if (map[Y - 1, X] == 1 && map[Y, X - 1] == 1 && map[Y + 1, X] == 1)
+                        return -10;
                     if (map[Y - 1, X] == 1 && map[Y - 1, X + 1] == 1 && map[Y, X + 1] == 1)
                         return -2;
                     if (map[Y + 1, X + 1] == 1 && map[Y + 1, X] == 1 && map[Y, X + 1] == 1) 
@@ -262,6 +269,7 @@ namespace TowerDefenseOOP
                     if (map[Y - 1, X] == 1 && map[Y - 1, X - 1] == 1 && map[Y, X - 1] == 1)
                         return -5;
                 }
+                else
                 if(Y==Height-1)
                 {
                     if (map[Y - 1, X] == 1 && map[Y - 1, X - 1] == 1 && map[Y, X - 1] == 1)
@@ -270,6 +278,7 @@ namespace TowerDefenseOOP
                         if (map[Y - 1, X] == 1 && map[Y - 1, X + 1] == 1 && map[Y, X + 1] == 1)
                             return -2;
                 }
+                else
                 if (Y == 0 && X < Width - 1 && X -1 >=0) 
                 {
                     if (map[Y, X - 1] == 1 && map[Y + 1, X - 1] == 1 && map[Y + 1, X] == 1) 
@@ -277,23 +286,49 @@ namespace TowerDefenseOOP
                     if (map[Y, X + 1] == 1 && map[Y + 1, X + 1] == 1 && map[Y + 1, X] == 1)
                         return -3;
                 }
+                else
+                if(X==0 && Y>0 && Y+1<Height)
+                {
+                    if (map[Y + 1, X] == 1 && map[Y, X + 1] == 1)
+                        return -3;
+                    if (map[Y - 1, X] == 1 && map[Y, X + 1] == 1)
+                        return -2;
+                }
+                else
+                    if (X == Width-1 && Y > 0 && Y + 1 < Height)
+                    {
+                        if (map[Y + 1, X] == 1 && map[Y, X - 1] == 1)
+                            return -4;
+                        if (map[Y - 1, X] == 1 && map[Y, X - 1] == 1)
+                            return -5;
+                    }
+
                 return -1; //Grass
             }
-            if(Y<Height-1 && X<Width-1&&Y-1>=0 &&X-1>=0)
-            {
-                if (map[Y, X] == 1 && map[Y + 1, X] == 1 && map[Y, X - 1] == 1 && map[Y, X + 1] == 1)
+            else
+                if (map[Y, X] == 1)
+                {
+                    if (Y < Height - 1 && X < Width - 1 && Y - 1 >= 0 && X - 1 >= 0)
+                    {
+                        if (map[Y + 1, X] == 1 && map[Y, X - 1] == 1 && map[Y, X + 1] == 1)
+                            return 0;
+                        if (map[Y + 1, X] == 1 && map[Y - 1, X] == 1 && map[Y, X + 1] == 1)
+                            return 0;
+                        if (map[Y + 1, X] == 1 && map[Y - 1, X] == 1 && map[Y, X - 1] == 1)
+                            return 0;
+                        if (map[Y - 1, X] == 1 && map[Y, X + 1] == 1 && map[Y, X - 1] == 1)
+                            return 0;
+                        if (map[Y, X - 1] == 1 && map[Y + 1, X] == 1)
+                            return 1;
+                        if (map[Y, X - 1] == 1 && map[Y - 1, X] == 1)
+                            return 2;
+                        if (map[Y, X + 1] == 1 && map[Y - 1, X] == 1)
+                            return 3;
+                        if (map[Y, X - 1] == 0 && map[Y - 1, X] == 0)
+                            return 4;
+                    }
                     return 0;
-                if (map[Y, X] == 1 && map[Y + 1, X] == 1 && map[Y - 1, X] == 1 && map[Y, X + 1] == 1) 
-                    return 0;
-                if (map[Y, X] == 1 && map[Y + 1, X] == 1 && map[Y - 1, X] == 1 && map[Y, X - 1] == 1)
-                    return 0;
-                if (map[Y, X] == 1 && map[Y, X - 1] == 1 && map[Y + 1, X] == 1)
-                    return 1;
-                if (map[Y, X] == 1 && map[Y, X - 1] == 1 && map[Y - 1, X] == 1)
-                    return 2;
-                if (map[Y, X] == 1 && map[Y, X + 1] == 1 && map[Y - 1, X] == 1)
-                    return 3;
-            }
+                }
             return 0;
         }
 
@@ -301,17 +336,15 @@ namespace TowerDefenseOOP
         //Hàm vẽ map
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+           // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             Color color = Color.Tan;
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    if (map[y, x] == 1)
-                    {
+                    Texture2D texture = null;
                         position.X = x * Container.tileSize;
                         position.Y = y * Container.tileSize;
-                        Texture2D texture = null;
                         texture = roadTextureList[0];
                         spriteBatch.Draw(texture, position, color);
                         int k = CheckRoad(y, x);
@@ -324,13 +357,14 @@ namespace TowerDefenseOOP
                         }
                         else
                         {
+                            texture = tileTextureList[0];
+                            spriteBatch.Draw(texture, position, color);
                             texture = roadTextureList[k];
                             spriteBatch.Draw(texture, position, color);
                         }
-                    }
+                    
                 }
             }
         }
-
     }
 }

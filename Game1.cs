@@ -19,7 +19,7 @@ namespace TowerDefenseOOP
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Map map = new Map();
-
+        Player player;
         Level level;
 
         public Game1()
@@ -50,6 +50,9 @@ namespace TowerDefenseOOP
             int maplevel = 1;
             level = new Level(map, maplevel);
             level.LoadContent(Content);
+            player = new Player(map, maplevel);
+            player.LoadContent(Content);
+
         }
 
         protected override void UnloadContent()
@@ -61,7 +64,7 @@ namespace TowerDefenseOOP
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -70,6 +73,7 @@ namespace TowerDefenseOOP
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             level.Draw(spriteBatch);
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
