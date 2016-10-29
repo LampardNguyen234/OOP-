@@ -23,6 +23,7 @@ namespace TowerDefenseOOP
         public static int enemyTextureSize = 50;
         public static int healthBarHeight = 3;
         public static int healthBarWidth = 30;
+        public static int enemyStartingHP = 100;
 
         public static int MapWidth = 15;
         public static int MapHeight = 10;
@@ -34,6 +35,8 @@ namespace TowerDefenseOOP
         public static int enemyPerWave = 50;
 
         public static int bulletSize = 8;
+
+        public static int basicEnemySpeed = 1;
 
     }
 }

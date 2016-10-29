@@ -22,6 +22,7 @@ namespace TowerDefenseOOP
         Player player;
         Level level;
 
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,8 +35,6 @@ namespace TowerDefenseOOP
 
         protected override void Initialize()
         {
-            
-
             base.Initialize();
         }
 
@@ -52,7 +51,6 @@ namespace TowerDefenseOOP
             level.LoadContent(Content);
             player = new Player(map, maplevel);
             player.LoadContent(Content);
-
         }
 
         protected override void UnloadContent()
@@ -65,8 +63,7 @@ namespace TowerDefenseOOP
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             player.Update(gameTime);
-
-            base.Update(gameTime);
+                base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
@@ -74,7 +71,6 @@ namespace TowerDefenseOOP
             spriteBatch.Begin();
             level.Draw(spriteBatch);
             player.Draw(spriteBatch);
-
             spriteBatch.End();
             base.Draw(gameTime);
         }

@@ -35,11 +35,11 @@ namespace TowerDefenseOOP
        private Texture2D background;
 
        private Vector2 position;
-        public int Width
+        public int Width        //Độ rộng của ma trận map
         {
             get { return map.GetLength(1); }
         }
-        public int Height
+        public int Height       //Chiều cao của ma trận map
         {
             get { return map.GetLength(0); }
         }
@@ -61,41 +61,37 @@ namespace TowerDefenseOOP
         {
             while (wayPoints.Count > 0)
                 wayPoints.Dequeue();
-            Random rand = new Random();                // tạo số ngẫu nhiên
-            Stack<Vector2> way=new Stack<Vector2>();
+            Random rand = new Random();                     // tạo số ngẫu nhiên
+            Stack<Vector2> way = new Stack<Vector2>();
             List<Vector2> beginningList = new List<Vector2>();
-
             #region Danh sách các điểm bắt đầu
-
             for (int x = 0; x < Width; x++)
             {
                 if (map[0, x] == 1)
-                { 
+                {
                     Vector2 beginningPoint = new Vector2(x, 0) * Container.roadSize;
                     beginningList.Add(beginningPoint);
                 }
             }
-            for (int y = 0; y < Height;y++ )
+            for (int y = 0; y < Height; y++)
             {
                 if (map[y, 0] == 1)
                     beginningList.Add(new Vector2(0, y) * Container.roadSize);
             }
-            int m = rand.Next(0, beginningList.Count);          //Chọn ngẫu nhiêu một trong các điểm bắt đầu
+            int m = rand.Next(0, beginningList.Count);
+            if (m == 1)
+                m = 1;
             way.Push(beginningList[m]);
-
             #endregion
-
-            #region Tạo ngẫu nhiên waypoint
-
             for (int y = 1; y < Height; y++)
             {
                 for (int x = 1; x < Width; x++)
                 {
-                    if (map[y, x] == 1 && !isContained(way, y, x))      //Nếu điểm đã có trong waypoint hoặc có chỉ số khác 1 thì bỏ qua
+                    if (map[y, x] == 1 && !isContained(way, y, x))
                     {
-                        if (x == Width - 1)     //Trường hợp nằm ở cột cuối cùng
+                        if (y == 0 || x < 1 || x == Width - 1)
                         {
-                            if ((int)(way.Peek().Y / Container.roadSize) != Height - 1) 
+                            if ((int)(way.Peek().Y / Container.roadSize) != Height - 1)
                                 way.Push(new Vector2(x, y) * Container.roadSize);
                         }
                         else
@@ -159,6 +155,7 @@ namespace TowerDefenseOOP
                                     }
                                 }
                                 #endregion
+
                                 #region Có thể đi thẳng xuống
                                 if (y < Height - 2)
                                 {
@@ -179,15 +176,13 @@ namespace TowerDefenseOOP
                     }
                 }
             }
-
-            #endregion
             Stack<Vector2> temp = new Stack<Vector2>();
-            while(way.Count>0)
+            while (way.Count > 0)
             {
                 temp.Push(way.Pop());
             }
             while (temp.Count > 0)
-                WayPoints.Enqueue(temp.Pop());      //Thêm từng vị trí vào waypoints
+                WayPoints.Enqueue(temp.Pop());
         }
         #endregion
 
