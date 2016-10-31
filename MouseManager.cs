@@ -15,12 +15,14 @@ namespace TD
         public static Vector2 position;
         MouseState mouseState;
         Texture2D mouseTexture;
+        Texture2D towerTexture;
         MouseState oldState;
         List<Tower> towerList;
         List<Enemy> enemyList;
         private Vector2 origin;
+        private bool isBuildingTower;
         int level;
-        public static bool buildTower;
+        public static int buildTower;
 
         public int Level
         {
@@ -41,7 +43,8 @@ namespace TD
             this.level = level;
             this.towerList = towerList;
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
-            buildTower = false;
+            buildTower = -1;
+            isBuildingTower = false;
         }
 
 
@@ -73,6 +76,7 @@ namespace TD
         {
             int width = Container.MapWidth;
             int height = Container.MapHeight;
+            if (position.X > 870) return false;
             foreach (Vector2 roadCenter in roadCenters)
             {
                 if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize)
@@ -95,6 +99,7 @@ namespace TD
         public void LoadContent(ContentManager content)
         {
             mouseTexture = content.Load<Texture2D>("hover");
+            towerTexture = content.Load<Texture2D>("tower__000");
             addToMap();
         }
 
@@ -104,17 +109,37 @@ namespace TD
         {
             mouseState = Mouse.GetState();
             position = new Vector2(mouseState.X, mouseState.Y);
-            buildTower = false;
-            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            buildTower = -1;
+
+            //Hàm lấy giá trị và trạng thái chọn tháp để mang vào map xây
+            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900)
+            {
+                buildTower = 2;//Giá trị trả về từ hàm isClick() trong Menu
+                isBuildingTower = true;
+            }
+
+            //RightClick để hủy việc đang chọn Tower
+            if (mouseState.RightButton == ButtonState.Released && oldState.RightButton == ButtonState.Pressed && isBuildingTower)
+            {
+                isBuildingTower = false;
+                buildTower = -1;
+            }
+
+
+            //Check vị trí của Tower
+            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && isBuildingTower)
             {
                 if (checkTowerAvailable(position))
                 {
-                    buildTower = true;
+                    buildTower = 1;
+                    isBuildingTower = false;
                 }
             }
-            oldState=mouseState;
+            oldState = mouseState;
         }
 
+
+        //Hàm vẽ
         public void Draw(SpriteBatch spriteBatch)
         {
             Color color;
@@ -122,7 +147,14 @@ namespace TD
                 color = Color.Blue;
             else
                 color = Color.Red;
-            spriteBatch.Draw(mouseTexture, position, null, color * 0.5f, 0f, origin, (float)Container.tileSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            if (isBuildingTower)
+            {
+                color = color * 0.5f;
+                spriteBatch.Draw(towerTexture, position, null, Color.White, 0f, origin, (float)Container.tileSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            }
+            else color = color * 0f;
+            spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, (float)Container.tileSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            
         }
     }
 }
