@@ -11,13 +11,15 @@ namespace TD
 {
     class MouseManager
     {
-        Vector2 position;
+        public static Vector2 position;
         MouseState mouseState;
         Texture2D mouseTexture;
         MouseState oldState;
         List<Tower> towerList;
+        List<Enemy> enemyList;
         private Vector2 origin;
         int level;
+        public static bool buildTower;
 
         public int Level
         {
@@ -35,6 +37,7 @@ namespace TD
             this.level = level;
             this.towerList = towerList;
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
+            buildTower = false;
         }
 
         public void addToMap()
@@ -90,7 +93,15 @@ namespace TD
         {
             mouseState = Mouse.GetState();
             position = new Vector2(mouseState.X, mouseState.Y);
-            oldState = mouseState;
+            buildTower = false;
+            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            {
+                if (checkTowerAvailable(position))
+                {
+                    buildTower = true;
+                }
+            }
+            oldState=mouseState;
         }
 
         public void Draw(SpriteBatch spriteBatch)
