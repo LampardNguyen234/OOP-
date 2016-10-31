@@ -16,8 +16,14 @@ namespace TowerDefenseOOP
         int[,] map = new int[Container.MapHeight,Container.MapWidth];    //Bản đồ trò chơi
         List<Vector2> roadCenters = new List<Vector2>();//Danh sách các vector2 chứa các center của các ô có đường đi
         List<Vector2> rockCenters = new List<Vector2>();//Danh sách các vector2 chứa các center của các ô có đá/rừng
-        int level;
+        List<Texture2D> bulletTextureList = new List<Texture2D>();
+        List<Texture2D> towerTextureList = new List<Texture2D>();
+        List<RocketTower> rocketTowerList = new List<RocketTower>();
 
+        private Texture2D mouseTexture;     //Texture dùng để check vị trí xây dựng tower có hợp lệ không
+        private Texture2D baseTexture;
+        float scale;
+        int level;
         public int Level
         {
             get { return level; }
@@ -26,8 +32,6 @@ namespace TowerDefenseOOP
 
         private Vector2 position;
         private Vector2 origin;
-
-        private Texture2D mouseTexture;     //Texture dùng để check vị trí xây dựng tower có hợp lệ không
 
         private MouseState mouseState;
         private MouseState oldState;
@@ -40,6 +44,7 @@ namespace TowerDefenseOOP
             this.map = map.MapList[level - 1];              //Tùy vào level sẽ có map khác nhau
             this.level = level;                             //Level của màn chơi
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
+            this.scale = Container.enemyTextureScale;
         }
 
         //Hàm lấy vào tất cả các ô nằm trên đường đi add vào roadCenters và các ô chứa đá add vào rockCenters
@@ -72,12 +77,17 @@ namespace TowerDefenseOOP
             int height = Container.MapHeight;
             foreach (Vector2 roadCenter in roadCenters)
             {
-                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize)
+                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize*(scale+0.05f))
                     return false;
             }
             foreach (Vector2 rockCenter in rockCenters)
             {
                 if (Vector2.Distance(position, rockCenter) < (float)Container.tileSize * 2)
+                    return false;
+            }
+            foreach (RocketTower rk in rocketTowerList)
+            {
+                if (Vector2.Distance(position, rk.Position) < (float)Container.towerSize * (scale + 0.05f))
                     return false;
             }
             return true;
@@ -87,7 +97,15 @@ namespace TowerDefenseOOP
         //Hàm LoadContent
         public void LoadContent(ContentManager content)
         {
-            mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture 
+            mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture
+            for (int i = 0; i < Container.numberOfTowers;i++ )
+            {
+                Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
+                bulletTextureList.Add(bullet);
+                Texture2D tower = content.Load<Texture2D>("tower_00" + i.ToString());
+                towerTextureList.Add(tower);
+            }
+            baseTexture=content.Load<Texture2D>("base");
             addPositions();                                         
         }
 
@@ -98,6 +116,27 @@ namespace TowerDefenseOOP
 
             position = new Vector2(mouseState.X, mouseState.Y);
 
+            if(isTowerAvailable(position))
+            {
+                if(mouseState.LeftButton==ButtonState.Released && oldState.LeftButton==ButtonState.Pressed)
+                {
+                    RocketTower rT = new RocketTower(towerTextureList[3], 4, position, baseTexture, bulletTextureList[3]);
+                    rocketTowerList.Add(rT);
+                }
+            }
+
+            //Update Tower
+            for (int i = 0; i < rocketTowerList.Count;i++ )
+            {
+                if (rocketTowerList[i].IsAlive)
+                    rocketTowerList[i].Update(gameTime);
+                else
+                {
+                    rocketTowerList.RemoveAt(i);
+                    i--;
+                }
+            }
+
             oldState = mouseState;
         }
 
@@ -106,10 +145,17 @@ namespace TowerDefenseOOP
         {
             Color color;
             if (isTowerAvailable(position))
-                color = Color.Red;
-            else
                 color = Color.Blue;
-            spriteBatch.Draw(mouseTexture, position, null, color*0.2f, 0f, origin, (float)Container.tileSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            else
+                color = Color.Red;
+            spriteBatch.Draw(mouseTexture, position, null, color*0.5f, 0f, origin, (float)Container.tileSize*scale / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            foreach(RocketTower rk in rocketTowerList)
+            {
+                if(rk.IsAlive)
+                {
+                    rk.Draw(spriteBatch);
+                }
+            }
         }
     }
 }

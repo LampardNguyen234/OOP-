@@ -14,6 +14,12 @@ namespace TowerDefenseOOP
         #region Khai báo
         private Vector2 position;       //Vị trí    
         private Vector2 center;         //Tâm
+
+        public Vector2 Center
+        {
+            get { return center; }
+            set { center = value; }
+        }
         private Vector2 origin;
         private Rectangle boundingBox;
         private Rectangle healthBarRect;//Thanh hiển thị máu
@@ -21,6 +27,12 @@ namespace TowerDefenseOOP
         private float rotation;         //góc quay, dùng khi vẽ
         private int attack;
         private int currentHP;          //Máu hiện tại
+
+        public int CurrentHP
+        {
+            get { return currentHP; }
+            set { currentHP = value; }
+        }
         private int startingHP;         //Tổng máu
         private int bountyGiven;        //Tiền thưởng
         private int frameX, frameY;     //Dùng để làm animation cho enemy
@@ -30,7 +42,8 @@ namespace TowerDefenseOOP
         private float healthPercent;
         private float timer;            //Biến đếm thời gian thay đổi hình ảnh texture
         private bool isAlive;           //Biến kiểm tra enemy còn sống hay đã chết
-
+        private int enemyTextureHeight;
+        private int enemyTextureWidth;
         public bool IsAlive
         {
             get { return isAlive; }
@@ -39,6 +52,12 @@ namespace TowerDefenseOOP
 
 
         private Texture2D texture;
+
+        public Texture2D Texture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
         private Texture2D healthBarTexture;
 
         private Queue<Vector2> wayPoints = new Queue<Vector2>();    //Đường đi của enemy
@@ -46,6 +65,7 @@ namespace TowerDefenseOOP
         private Enemy enemy;
         private Texture2D healthBar;
         private int maplevel;
+        private float scale;        //Tỉ lệ hình ảnh in ra
 
         #endregion 
 
@@ -53,6 +73,7 @@ namespace TowerDefenseOOP
         //Constructor
         public Enemy(Texture2D texture,Texture2D healthBarTexture,int level)
         {
+            scale = Container.enemyTextureScale;
             isAlive = true;
             this.healthBarTexture = healthBarTexture;
             this.texture = texture;
@@ -70,8 +91,10 @@ namespace TowerDefenseOOP
             speed = Container.basicEnemySpeed* level;
             textureInterval = 20f;
             timer = 0;
+            enemyTextureWidth = texture.Width / Container.enemyTextureSize;
+            enemyTextureHeight= texture.Height / Container.enemyTextureSize;
             healthPercent = (float)currentHP / (float)startingHP;
-            healthBarRect = new Rectangle(((int)center.X + (int)position.X) / 2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
+            healthBarRect = new Rectangle(((int)center.X + Container.healthBarWidth/2), (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
         }
 
@@ -127,13 +150,29 @@ namespace TowerDefenseOOP
                     velocity = Vector2.Multiply(direction, speed);
 
                     position += velocity;
-                    center = new Vector2(position.X + Container.tileSize / 2, position.Y + Container.tileSize / 2);
-                    origin = new Vector2(Container.enemyTextureSize / 2, Container.enemyTextureSize / 2);
-                    healthBarRect = new Rectangle(((int)center.X + (int)position.X) / 2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);//Cập nhật vị trí thanh máu
                 }
             }
             else
-                isAlive = false;
+            {
+                if (rotation >= 0)
+                    if (position.Y < Container.MapHeight * Container.tileSize)
+                        position.Y += speed;
+                    else
+                    {
+                        isAlive = false;
+                        return;
+                    }
+                else
+                    if (position.X < Container.MapWidth * Container.tileSize)
+                        position.X += speed;
+                    else
+                    {
+                        isAlive = false;
+                        return;
+                    }
+                
+            }   
+            
         }
 
         //Trạng thái quay của Texture
@@ -253,23 +292,32 @@ namespace TowerDefenseOOP
             timer += gameTime.ElapsedGameTime.Milliseconds;
             if(timer>textureInterval)
             {
-                if (frameX == texture.Width / Container.enemyTextureSize - 1)
+                if (frameX == enemyTextureWidth - 1)
                 {
                     frameY++;
                     frameX = 0;
                 }
                 else
                     frameX++;
-                if(frameY==texture.Height/Container.enemyTextureSize -1)
+                if (frameY == enemyTextureHeight)
                 {
                     frameY = frameX = 0;
                 }
                 timer = 0;
             }
+            if (currentHP <= 0)
+                isAlive = false;
+            //Tính toán máu
+            healthPercent = (float)currentHP / (float)startingHP;
+            //Chuyển frame texture của enemy
             boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
-            
             //Di chuyển enemy
             move();
+            //Update center và origin
+            center = new Vector2(position.X + Container.tileSize / 2, position.Y + Container.tileSize / 2);
+            origin = new Vector2(Container.enemyTextureSize / 2, Container.enemyTextureSize / 2);
+            //Cập nhật trạng thái và vị trí thanh máu
+            healthBarRect = new Rectangle((int)center.X - Container.healthBarWidth/2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             //Tính toán góc quay của texture enemy
             calculateRotationAngle();
         }
@@ -279,9 +327,10 @@ namespace TowerDefenseOOP
         {
             if(isAlive)
             {
-                spriteBatch.Draw(texture, center, boundingBox, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                //Vẽ enemy
+                spriteBatch.Draw(texture, center, boundingBox, Color.White, rotation, origin,scale, SpriteEffects.None, 0f);
                 //Vẽ thanh máu
-                spriteBatch.Draw(healthBarTexture, healthBarRect, Color.White);
+                spriteBatch.Draw(healthBarTexture, healthBarRect, Color.Violet);
             }
         }
     }

@@ -20,6 +20,7 @@ namespace TowerDefenseOOP
         SpriteBatch spriteBatch;
         Map map = new Map();
         Player player;
+        Enemy enemy;
         Level level;
 
 
@@ -51,6 +52,11 @@ namespace TowerDefenseOOP
             level.LoadContent(Content);
             player = new Player(map, maplevel);
             player.LoadContent(Content);
+            Texture2D enemyTexture = Content.Load<Texture2D>("enemy_009");
+            Texture2D healthbar = Content.Load<Texture2D>("healthbar");
+            enemy = new Enemy(enemyTexture, healthbar, 1);
+            level.LoadWayPoint(10);
+            enemy.SetWaypoints(level.WayPoints);
         }
 
         protected override void UnloadContent()
@@ -63,6 +69,7 @@ namespace TowerDefenseOOP
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             player.Update(gameTime);
+            enemy.Update(gameTime);
                 base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -71,6 +78,7 @@ namespace TowerDefenseOOP
             spriteBatch.Begin();
             level.Draw(spriteBatch);
             player.Draw(spriteBatch);
+            enemy.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }

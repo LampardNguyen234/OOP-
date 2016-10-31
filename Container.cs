@@ -15,15 +15,16 @@ namespace TowerDefenseOOP
         public static int scrHeight = 600;
         public static float PI= 3.14159265358979f;
 
-        public static int animationWidth = 64;
-        public static int animationHeight = 64;
+        public static int animationWidth = 50;
+        public static int animationHeight = 50;
         public static int animationFrameXMax = 8;
         public static int animationFrameYMax = 8;
 
         public static int enemyTextureSize = 50;
         public static int healthBarHeight = 3;
-        public static int healthBarWidth = 30;
+        public static int healthBarWidth = 20;
         public static int enemyStartingHP = 100;
+        public static float enemyTextureScale = 0.65f;
 
         public static int MapWidth = 15;
         public static int MapHeight = 10;
@@ -37,6 +38,8 @@ namespace TowerDefenseOOP
         public static int bulletSize = 8;
 
         public static int basicEnemySpeed = 1;
+
+        public static int numberOfTowers = 4;
 
     }
 }
