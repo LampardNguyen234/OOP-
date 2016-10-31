@@ -3,159 +3,115 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace TowerDefenseOOP
+namespace TD
 {
     class Player
     {
         #region Khai báo
+        private int money;
 
-        int[,] map = new int[Container.MapHeight,Container.MapWidth];    //Bản đồ trò chơi
-        List<Vector2> roadCenters = new List<Vector2>();//Danh sách các vector2 chứa các center của các ô có đường đi
-        List<Vector2> rockCenters = new List<Vector2>();//Danh sách các vector2 chứa các center của các ô có đá/rừng
-        List<Texture2D> bulletTextureList = new List<Texture2D>();
-        List<Texture2D> towerTextureList = new List<Texture2D>();
-        List<RocketTower> rocketTowerList = new List<RocketTower>();
-
-        private Texture2D mouseTexture;     //Texture dùng để check vị trí xây dựng tower có hợp lệ không
-        private Texture2D baseTexture;
-        float scale;
-        int level;
-        public int Level
+        public int Money
         {
-            get { return level; }
-            set { level = value; }
+            get { return money; }
+            set { money = value; }
         }
 
-        private Vector2 position;
-        private Vector2 origin;
+        private Level level;
+
+        private int Round;
+
+        List<Tower> towerList;
+
+        Tower tower;
 
         private MouseState mouseState;
         private MouseState oldState;
 
+        private Texture2D towerTexture;
+        private Texture2D bulletTexture;
+        private Texture2D baseTexture;
+        private Texture2D animationTexture;
+
+        private int cellX;
+
+        public int CellX
+        {
+            get { return cellX; }
+            set { cellX = value; }
+        }
+
+        private int cellY;
+
+        public int CellY
+        {
+            get { return cellY; }
+            set { cellY = value; }
+        }
+
+        private int tileX;
+        private int tileY;
         #endregion
 
-        //Constructor
-        public Player(Map map, int level)
+        #region Constructor
+        public Player(Level level,Map map, ref List<Tower> towerList)
         {
-            this.map = map.MapList[level - 1];              //Tùy vào level sẽ có map khác nhau
-            this.level = level;                             //Level của màn chơi
-            origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
-            this.scale = Container.enemyTextureScale;
+            int mapLevel = 1;
+            this.level = level;
+            this.towerList = towerList;
         }
+        #endregion
 
-        //Hàm lấy vào tất cả các ô nằm trên đường đi add vào roadCenters và các ô chứa đá add vào rockCenters
-        public void addPositions()
+        #region Kiểm tra xem vị trí có thể xây Tower được không
+        private bool IsCellClear()
         {
-            Vector2 temp = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
-            for(int y=0;y<Container.MapHeight;y++)
+            bool inBounds = cellX >= 0 && cellY >= 0 && cellX < level.Width && cellY < level.Height;
+
+            bool spaceClear = true;
+
+            foreach (Tower tower in towerList)
             {
-                for(int x=0;x<Container.MapWidth;x++)
-                {
-                    if(map[y,x]==1)//Chỉ số các ô nằm trên đường đi bằng 1
-                    {
-                        Vector2 temp2 = new Vector2(x, y) * Container.towerSize + temp;//Lấy vị trí tâm của ô 
-                        roadCenters.Add(temp2);  //Thêm vào list
-                    }
-                    if (map[y, x] == 2)//Chỉ số các ô chứa đá bằng 2
-                    {
-                        Vector2 temp2 = new Vector2(x, y) * Container.towerSize + temp;//Lấy vị trí tâm của ô 
-                        rockCenters.Add(temp2);  //Thêm vào list
-                    }
-                }
+                spaceClear = (tower.Position != new Vector2(tileX, tileY));
+
+                if (!spaceClear)
+                    break;
             }
+
+            bool onPath = (level.GetIndex(cellY, cellX) != 1);
+            return inBounds && spaceClear && onPath;
         }
+        #endregion
 
-        //Hàm kiểm tra xem có thể xây Tower ở vị trí nhập vào không
-
-        public bool isTowerAvailable(Vector2 position)
-        {
-            int width = Container.MapWidth;
-            int height = Container.MapHeight;
-            foreach (Vector2 roadCenter in roadCenters)
-            {
-                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize*(scale+0.05f))
-                    return false;
-            }
-            foreach (Vector2 rockCenter in rockCenters)
-            {
-                if (Vector2.Distance(position, rockCenter) < (float)Container.tileSize * 2)
-                    return false;
-            }
-            foreach (RocketTower rk in rocketTowerList)
-            {
-                if (Vector2.Distance(position, rk.Position) < (float)Container.towerSize * (scale + 0.05f))
-                    return false;
-            }
-            return true;
-        }
-
-
-        //Hàm LoadContent
         public void LoadContent(ContentManager content)
         {
-            mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture
-            for (int i = 0; i < Container.numberOfTowers;i++ )
-            {
-                Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
-                bulletTextureList.Add(bullet);
-                Texture2D tower = content.Load<Texture2D>("tower_00" + i.ToString());
-                towerTextureList.Add(tower);
-            }
-            baseTexture=content.Load<Texture2D>("base");
-            addPositions();                                         
+            towerTexture = content.Load<Texture2D>("tower__000");
+            baseTexture = content.Load<Texture2D>("base");
         }
 
-        //Hàm update
-        public void Update(GameTime gameTime)
+        #region Hàm update
+        public void Update(GameTime gameTime, List<Enemy> enemyList)
         {
             mouseState = Mouse.GetState();
-
-            position = new Vector2(mouseState.X, mouseState.Y);
-
-            if(isTowerAvailable(position))
+            if (MouseManager.buildTower)
             {
-                if(mouseState.LeftButton==ButtonState.Released && oldState.LeftButton==ButtonState.Pressed)
-                {
-                    RocketTower rT = new RocketTower(towerTextureList[3], 4, position, baseTexture, bulletTextureList[3]);
-                    rocketTowerList.Add(rT);
-                }
+                tower = new Tower(1, MouseManager.position, baseTexture, towerTexture);
+                towerList.Add(tower);
             }
-
-            //Update Tower
-            for (int i = 0; i < rocketTowerList.Count;i++ )
-            {
-                if (rocketTowerList[i].IsAlive)
-                    rocketTowerList[i].Update(gameTime);
-                else
-                {
-                    rocketTowerList.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            oldState = mouseState;
         }
+        #endregion
 
-        //Hàm Draw
+        #region Hàm Draw
         public void Draw(SpriteBatch spriteBatch)
         {
-            Color color;
-            if (isTowerAvailable(position))
-                color = Color.Blue;
-            else
-                color = Color.Red;
-            spriteBatch.Draw(mouseTexture, position, null, color*0.5f, 0f, origin, (float)Container.tileSize*scale / (float)mouseTexture.Width, SpriteEffects.None, 0f);
-            foreach(RocketTower rk in rocketTowerList)
+            foreach (Tower tower in towerList)
             {
-                if(rk.IsAlive)
-                {
-                    rk.Draw(spriteBatch);
-                }
+                tower.Draw(spriteBatch);
             }
         }
+        #endregion
+
     }
 }
