@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework;
 
 namespace TowerDefenseOOP
 {
@@ -11,7 +12,7 @@ namespace TowerDefenseOOP
        
         public static int tileSize = 60;
         public static int roadSize = 60;
-        public static int scrWidth = 1100;
+        public static int scrWidth = 1200;
         public static int scrHeight = 600;
         public static float PI= 3.14159265358979f;
 
@@ -41,5 +42,33 @@ namespace TowerDefenseOOP
 
         public static int numberOfTowers = 4;
 
+        // Tu update 10:17 31/10 // Button size
+        //button
+        //<Start>
+        public static Vector2 btnMenuGameSize = new Vector2(100, 20);
+        public static Vector2 btnTowerSize = new Vector2(50, 50);
+        public static Vector2 btnBackSize = new Vector2(80, 80);
+
+        public static Vector2 btnPlayPosition = new Vector2(500, 300);
+
+        public static Vector2 btnIntroPosition = new Vector2(500, 200);
+
+        public static Vector2 btnTacGiaPosition = new Vector2(500, 400);
+
+        public static Vector2 btnBackPosition = new Vector2(750, 150);
+
+        public static Rectangle playMenuPosition = new Rectangle(900, 0, 300, 600);
+
+
+
+        public static Vector2 btnTower1Position = new Vector2(1000, 200);
+        public static Vector2 btnTower2Position = new Vector2(1100, 200);
+        public static Vector2 btnTower3Position = new Vector2(1000, 300);
+        public static Vector2 btnTower4Position = new Vector2(1100, 300);
+        public static Vector2 btnTower5Position = new Vector2(1000, 400);
+        public static Vector2 btnTower6Position = new Vector2(1100, 400);
+
+        public static int tower1Price = 50;
+        //<End>
     }
 }
