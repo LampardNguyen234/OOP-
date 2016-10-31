@@ -12,76 +12,37 @@ namespace TD
     class Player
     {
         #region Khai báo
-        private int money;
+        int[,] map = new int[Container.MapHeight, Container.MapWidth];    //Bản đồ trò chơi
+        List<Vector2> roadCenters = new List<Vector2>();    //Danh sách các vector2 chứa các center của các ô có đường đi
+        List<Vector2> rockCenters = new List<Vector2>();//Danh sách các vector2 chứa các center của các ô có đá/rừng
+        List<Tower> towerList;
+        int level;
 
-        public int Money
+        public int Level
         {
-            get { return money; }
-            set { money = value; }
+            get { return level; }
+            set { level = value; }
         }
 
-        private Level level;
+        private Vector2 position;
+        private Vector2 origin;
 
-        private int Round;
-
-        List<Tower> towerList;
-
-        Tower tower;
+        private Texture2D mouseTexture; 
+        private Texture2D towerTexture;
+        private Texture2D baseTexture;
 
         private MouseState mouseState;
         private MouseState oldState;
 
-        private Texture2D towerTexture;
-        private Texture2D bulletTexture;
-        private Texture2D baseTexture;
-        private Texture2D animationTexture;
-
-        private int cellX;
-
-        public int CellX
-        {
-            get { return cellX; }
-            set { cellX = value; }
-        }
-
-        private int cellY;
-
-        public int CellY
-        {
-            get { return cellY; }
-            set { cellY = value; }
-        }
-
-        private int tileX;
-        private int tileY;
+        Tower tower;
         #endregion
 
         #region Constructor
-        public Player(Level level,Map map, ref List<Tower> towerList)
+        public Player(int level,Map map, ref List<Tower> towerList)
         {
             int mapLevel = 1;
             this.level = level;
             this.towerList = towerList;
-        }
-        #endregion
-
-        #region Kiểm tra xem vị trí có thể xây Tower được không
-        private bool IsCellClear()
-        {
-            bool inBounds = cellX >= 0 && cellY >= 0 && cellX < level.Width && cellY < level.Height;
-
-            bool spaceClear = true;
-
-            foreach (Tower tower in towerList)
-            {
-                spaceClear = (tower.Position != new Vector2(tileX, tileY));
-
-                if (!spaceClear)
-                    break;
-            }
-
-            bool onPath = (level.GetIndex(cellY, cellX) != 1);
-            return inBounds && spaceClear && onPath;
         }
         #endregion
 
