@@ -11,6 +11,7 @@ namespace TD
 {
     class MouseManager
     {
+        #region Khai báo
         public static Vector2 position;
         MouseState mouseState;
         Texture2D mouseTexture;
@@ -26,11 +27,14 @@ namespace TD
             get { return this.level; }
             set { this.level = value; }
         }
+        #endregion
 
         List<Vector2> roadCenters = new List<Vector2>();
         List<Vector2> rockCenters = new List<Vector2>();
         int[,] map = new int[Container.MapHeight, Container.MapWidth];
 
+
+        //Constructor
         public MouseManager(Map map, int level, ref List<Tower> towerList)
         {
             this.map = map.MapList[level - 1];
@@ -40,6 +44,8 @@ namespace TD
             buildTower = false;
         }
 
+
+        //Đưa vị trí cái waypoint và rock vào list
         public void addToMap()
         {
             Vector2 temp = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
@@ -61,6 +67,8 @@ namespace TD
             }
         }
 
+
+        //Kiểm tra vị trí trỏ chuột có thể xây tower không
         public bool checkTowerAvailable(Vector2 position)
         {
             int width = Container.MapWidth;
@@ -83,12 +91,15 @@ namespace TD
             return true;
         }
 
+        //Load content
         public void LoadContent(ContentManager content)
         {
             mouseTexture = content.Load<Texture2D>("hover");
             addToMap();
         }
 
+
+        //Update
         public void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
