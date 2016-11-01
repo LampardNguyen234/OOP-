@@ -52,19 +52,19 @@ namespace TowerDefenseOOP
         //Đưa vị trí cái waypoint và rock vào list
         public void addToMap()
         {
-            Vector2 temp = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
+            Vector2 temp = new Vector2(Container.roadSize / 2, Container.roadSize / 2);
             for (int y = 0; y < Container.MapHeight; y++)
             {
                 for (int x = 0; x < Container.MapWidth; x++)
                 {
                     if (map[y, x] == 1)//Chỉ số các ô nằm trên đường đi bằng 1
                     {
-                        Vector2 temp2 = new Vector2(x, y) * Container.towerSize + temp;//Lấy vị trí tâm của ô 
+                        Vector2 temp2 = new Vector2(x, y) * Container.roadSize + temp;//Lấy vị trí tâm của ô 
                         roadCenters.Add(temp2);  //Thêm vào list
                     }
                     if (map[y, x] == 2)//Chỉ số các ô chứa đá bằng 2
                     {
-                        Vector2 temp2 = new Vector2(x, y) * Container.towerSize + temp;//Lấy vị trí tâm của ô 
+                        Vector2 temp2 = new Vector2(x, y) * Container.roadSize + temp;//Lấy vị trí tâm của ô 
                         rockCenters.Add(temp2);  //Thêm vào list
                     }
                 }
