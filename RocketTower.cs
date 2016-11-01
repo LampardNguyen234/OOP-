@@ -15,8 +15,8 @@ namespace TowerDefenseOOP
         public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture):
             base(level,position,baseTexture,texture,bulletTexture)
         {
-            radius = (float)350;
-            attack = 50;
+            radius = Container.radiusMax;
+            attack = Container.attackMax;
             price = 1200;
             smallestRange = radius;
             timer = 5000f; 

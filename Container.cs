@@ -61,8 +61,6 @@ namespace TowerDefenseOOP
 
         public static Rectangle playMenuPosition = new Rectangle(900, 0, 300, 600);
 
-
-
         public static Vector2 btnTower1Position = new Vector2(1000, 200);
         public static Vector2 btnTower2Position = new Vector2(1100, 200);
         public static Vector2 btnTower3Position = new Vector2(1000, 300);
@@ -70,6 +68,8 @@ namespace TowerDefenseOOP
         public static Vector2 btnTower5Position = new Vector2(1000, 400);
         public static Vector2 btnTower6Position = new Vector2(1100, 400);
 
+        public static float radiusMax = 300;
+        public static int attackMax = 50;
         public static int tower1Price = 50;
         //<End>
     }
