@@ -38,7 +38,7 @@ namespace TowerDefenseOOP
         private MouseState mouseState;
         private MouseState oldState;
 
-        //MouseManager mouseManager;
+        MouseManager mouseManager;
 
         #endregion
 
@@ -103,8 +103,8 @@ namespace TowerDefenseOOP
         public void LoadContent(ContentManager content)
         {
             mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture
-            //mouseManager = new MouseManager(map, this.level);
-            //mouseManager.LoadContent(content);
+            mouseManager = new MouseManager(map, Level);
+            mouseManager.LoadContent(content);
             for (int i = 0; i < Container.numberOfTowers;i++ )
             {
                 Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
@@ -124,6 +124,7 @@ namespace TowerDefenseOOP
         //Hàm update
         public void Update(GameTime gameTime,List<Enemy>enemyList)
         {
+            mouseManager.Update(gameTime);
            // mouseState = Mouse.GetState();
            // position = new Vector2(mouseState.X, mouseState.Y);
             
@@ -155,6 +156,7 @@ namespace TowerDefenseOOP
         //Hàm Draw
         public void Draw(SpriteBatch spriteBatch)
         {
+            mouseManager.Draw(spriteBatch);
             //Color color;
             //if (isTowerAvailable(position))
             //    color = Color.Blue;

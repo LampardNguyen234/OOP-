@@ -35,12 +35,13 @@ namespace TowerDefenseOOP
         List<Vector2> roadCenters = new List<Vector2>();
         List<Vector2> rockCenters = new List<Vector2>();
         int[,] map = new int[Container.MapHeight, Container.MapWidth];
+        private int Level_2;
 
 
         //Constructor
-        public MouseManager(Map map, int level)
+        public MouseManager(int[,] map, int level)
         {
-            this.map = map.MapList[level - 1];
+            this.map = map;
             this.level = level;
             //this.towerList = towerList;
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
