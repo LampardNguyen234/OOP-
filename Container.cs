@@ -32,7 +32,7 @@ namespace TowerDefenseOOP
 
         public static float timeBetweenEnemy = 100f;
 
-        public static int towerSize = 60;
+        public static int towerSize = 50;
 
         public static int enemyPerWave = 50;
 
@@ -41,6 +41,8 @@ namespace TowerDefenseOOP
         public static int basicEnemySpeed = 1;
 
         public static int numberOfTowers = 4;
+
+        public static int numberOfEnemies = 4;
 
         // Tu update 10:17 31/10 // Button size
         //button

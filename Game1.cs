@@ -19,11 +19,13 @@ namespace TowerDefenseOOP
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Map map = new Map();
+        Texture2D healthbar;
         Player player;
-        Enemy enemy;
+        List<Enemy> enemyList = new List<Enemy>();
+        List<Texture2D> enemyTextureList = new List<Texture2D>();
         Level level;
-
-
+        float timer;
+        int enemyPerWave;
         // Tu update 10:17 31/10 Button
         //<Start>
         // Tien dang co!!!!!!!!!! Update se chuyen thanh bien luu gia tri tien.
@@ -83,11 +85,14 @@ namespace TowerDefenseOOP
             level.LoadContent(Content);
             player = new Player(map, maplevel);
             player.LoadContent(Content);
-            Texture2D enemyTexture = Content.Load<Texture2D>("enemy_009");
-            Texture2D healthbar = Content.Load<Texture2D>("healthbar");
-            enemy = new Enemy(enemyTexture, healthbar, 1);
-            level.LoadWayPoint(10);
-            enemy.SetWaypoints(level.WayPoints);
+            healthbar = Content.Load<Texture2D>("healthbar");
+            for (int i = 0; i < Container.numberOfEnemies;i++ )
+            {
+                Texture2D enemy = Content.Load<Texture2D>("enemy_0" + i.ToString("d2"));
+                enemyTextureList.Add(enemy);
+            }
+            timer = 0;
+            enemyPerWave = Container.enemyPerWave;
             
             //Tu update Button
             //<Start>
@@ -172,8 +177,43 @@ namespace TowerDefenseOOP
                 case GameState.Playing:
                     // Update trong Playing them o day
                     //<Start>
-                    player.Update(gameTime);
-                    enemy.Update(gameTime);
+                        timer += 2;
+                        if (timer > Container.timeBetweenEnemy)
+                        {
+                            if (enemyPerWave > 0)
+                            {
+                                timer = 0f;
+                                enemyList.Add(new Enemy(enemyTextureList[3],healthbar,4));
+                                enemyPerWave--;
+                            }
+                        }
+                        foreach (Enemy enemy in enemyList)
+                        {
+                            if (enemy.isWayPointsSet == false)
+                            {
+                                Random rand = new Random();
+                                int k = rand.Next(0, 20);
+                                level.LoadWayPoint(k);
+                                enemy.SetWaypoints(level.WayPoints);
+                                enemy.isWayPointsSet = true;
+                            }
+                        }
+        
+                        player.Update(gameTime,enemyList);
+                        for (int i = 0; i < enemyList.Count; i++)
+                        {
+                            if (enemyList[i].IsAlive)
+                                enemyList[i].Update(gameTime);
+                            else
+                            {
+                                enemyList.RemoveAt(i);
+                                i--;
+                            }
+                        }
+
+            //animation.Update(gameTime);
+            base.Update(gameTime);
+                    player.Update(gameTime,enemyList);
                     
 
                     
@@ -220,22 +260,22 @@ namespace TowerDefenseOOP
                 case GameState.Playing:
 
                     spriteBatch.Draw(Content.Load<Texture2D>("PlayMenu"), Container.playMenuPosition, Color.White);
-                    btnTower1.Draw(spriteBatch);
-                    btnTower2.Draw(spriteBatch);
-                    btnTower3.Draw(spriteBatch);
-                    btnTower4.Draw(spriteBatch);
-                    btnTower5.Draw(spriteBatch);
-                    btnTower6.Draw(spriteBatch);
                    
                     //animation.Draw(spriteBatch);
                     // Cac ban ve trong playing thi Update o day
                     //<Start>
                     level.Draw(spriteBatch);
                     player.Draw(spriteBatch);
-                    enemy.Draw(spriteBatch);
+                    foreach (Enemy e in enemyList)
+                        e.Draw(spriteBatch);
                    
+                    btnTower1.Draw(spriteBatch);
+                    btnTower2.Draw(spriteBatch);
+                    btnTower3.Draw(spriteBatch);
+                    btnTower4.Draw(spriteBatch);
+                    btnTower5.Draw(spriteBatch);
+                    btnTower6.Draw(spriteBatch);
                     //<End>
-
                     break;
             }
             spriteBatch.End();

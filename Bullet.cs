@@ -15,9 +15,8 @@ namespace TowerDefenseOOP
         Vector2 position;
         Vector2 velocity;
         Vector2 origin;
+        Vector2 target;
         Vector2 center;
-        Vector2 target;             
-
 
         public Vector2 Center
         {
@@ -38,7 +37,6 @@ namespace TowerDefenseOOP
         private int level;
         private int speed;
 
-
         private float rotation;
 
         #endregion
@@ -48,16 +46,13 @@ namespace TowerDefenseOOP
             texture = bulletTexture;
             this.position = position;
             this.level = level;
-            this.speed = 15/level;
+            this.speed = 3;
             rotation = 0;
             age = 0;
             velocity = new Vector2(0, 0);
-            center = new Vector2(0, 0);
             if(target.HasValue)
                  this.target = target.Value;
         }
-
-
 
         public bool IsDead()
         {
@@ -69,24 +64,32 @@ namespace TowerDefenseOOP
             age = 200;
         }
 
-        
-        //Đi theo target
-        public void FollowTarget()
+        //Tính góc quay
+        public void SetRotation(float value)
         {
-            Vector2 direction = target - center;
-            direction.Normalize();
-            rotation = -(float)Math.Atan2(direction.X,direction.Y) - Container.PI/4;
+            rotation = value;
 
             velocity = Vector2.Transform(new Vector2(-speed, 0)
                 , Matrix.CreateRotationZ(rotation));//Need Fixing
         }
 
+        //Đuổi theo target
+        public void FollowTarget(Vector2 target)
+        {
+            Vector2 distance = target - center;
+            distance.Normalize();
+            rotation = -(float)Math.Atan2(distance.X, distance.Y) - (float)Math.PI/2;
+
+            velocity = Vector2.Transform(new Vector2(-speed, 0)
+                , Matrix.CreateRotationZ(rotation));//Need Fixing
+        }
+        
+        //Hàm Update
         public void Update(GameTime gameTime)
         {
-            age += 10;
             position += velocity;
-            center = new Vector2(position.X + Container.towerSize / 2, position.Y + Container.towerSize / 2);
-            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            center = position + new Vector2(texture.Width / 2, texture.Height / 2);
+            origin = new Vector2(0, 0);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -95,6 +98,8 @@ namespace TowerDefenseOOP
             {
                 spriteBatch.Draw(texture, center, null, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
             }
+            else
+                return;
         }
     }
 }

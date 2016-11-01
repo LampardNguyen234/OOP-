@@ -225,11 +225,11 @@ namespace TowerDefenseOOP
             {
                 if (k < 10)
                 {
-                    string sTile = "tile_" + (level+2).ToString("d2") + "_" + k.ToString("d2");
+                    string sTile = "tile_" + (level+1).ToString("d2") + "_" + k.ToString("d2");
                     Texture2D tile = Content.Load<Texture2D>(sTile);
                     tileTextureList.Add(tile);
                 }
-                    string sRoad = "road_" + (level+2).ToString("d2") + "_" + k.ToString("d2");  
+                    string sRoad = "road_" + (level+1).ToString("d2") + "_" + k.ToString("d2");  
                     Texture2D road = Content.Load<Texture2D>(sRoad);
                     roadTextureList.Add(road);
                 

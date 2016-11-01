@@ -50,6 +50,7 @@ namespace TowerDefenseOOP
             set { isAlive = value; }
         }
 
+        public bool isWayPointsSet;     //Kiểm tra xem waypoint đã được set hay chưa
 
         private Texture2D texture;
 
@@ -62,9 +63,7 @@ namespace TowerDefenseOOP
 
         private Queue<Vector2> wayPoints = new Queue<Vector2>();    //Đường đi của enemy
         private Queue<Vector2> copywayPoints = new Queue<Vector2>();
-        private Enemy enemy;
         private Texture2D healthBar;
-        private int maplevel;
         private float scale;        //Tỉ lệ hình ảnh in ra
 
         #endregion 
@@ -88,7 +87,7 @@ namespace TowerDefenseOOP
             bountyGiven = 25 * level;
             frameX = 0;
             frameY = 0;
-            speed = Container.basicEnemySpeed* level;
+            speed = Container.basicEnemySpeed;
             textureInterval = 20f;
             timer = 0;
             enemyTextureWidth = texture.Width / Container.enemyTextureSize;
@@ -96,6 +95,7 @@ namespace TowerDefenseOOP
             healthPercent = (float)currentHP / (float)startingHP;
             healthBarRect = new Rectangle(((int)center.X + Container.healthBarWidth/2), (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
+            isWayPointsSet = false;       
         }
 
 
