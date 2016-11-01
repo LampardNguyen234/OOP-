@@ -38,6 +38,8 @@ namespace TowerDefenseOOP
         private MouseState mouseState;
         private MouseState oldState;
 
+        //MouseManager mouseManager;
+
         #endregion
 
         //Constructor
@@ -74,33 +76,35 @@ namespace TowerDefenseOOP
 
         //Hàm kiểm tra xem có thể xây Tower ở vị trí nhập vào không
 
-        public bool isTowerAvailable(Vector2 position)
-        {
-            int width = Container.MapWidth;
-            int height = Container.MapHeight;
-            foreach (Vector2 roadCenter in roadCenters)
-            {
-                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize*(scale+0.05f))
-                    return false;
-            }
-            foreach (Vector2 rockCenter in rockCenters)
-            {
-                if (Vector2.Distance(position, rockCenter) < (float)Container.tileSize * 2)
-                    return false;
-            }
-            foreach (RocketTower rk in rocketTowerList)
-            {
-                if (Vector2.Distance(position, rk.Position) < (float)Container.towerSize * (scale + 0.05f))
-                    return false;
-            }
-            return true;
-        }
+        //public bool isTowerAvailable(Vector2 position)
+        //{
+        //    int width = Container.MapWidth;
+        //    int height = Container.MapHeight;
+        //    foreach (Vector2 roadCenter in roadCenters)
+        //    {
+        //        if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize*(scale+0.05f))
+        //            return false;
+        //    }
+        //    foreach (Vector2 rockCenter in rockCenters)
+        //    {
+        //        if (Vector2.Distance(position, rockCenter) < (float)Container.tileSize * 2)
+        //            return false;
+        //    }
+        //    foreach (RocketTower rk in rocketTowerList)
+        //    {
+        //        if (Vector2.Distance(position, rk.Position) < (float)Container.towerSize * (scale + 0.05f))
+        //            return false;
+        //    }
+        //    return true;
+        //}
 
 
         //Hàm LoadContent
         public void LoadContent(ContentManager content)
         {
             mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture
+            //mouseManager = new MouseManager(map, this.level);
+            //mouseManager.LoadContent(content);
             for (int i = 0; i < Container.numberOfTowers;i++ )
             {
                 Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
@@ -120,17 +124,17 @@ namespace TowerDefenseOOP
         //Hàm update
         public void Update(GameTime gameTime,List<Enemy>enemyList)
         {
-            mouseState = Mouse.GetState();
-            position = new Vector2(mouseState.X, mouseState.Y);
+           // mouseState = Mouse.GetState();
+           // position = new Vector2(mouseState.X, mouseState.Y);
             
-            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+           // if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+           // {
+            if (MouseManager.buildTower == 1)
             {
-                if (isTowerAvailable(position))
-                {
-                    RocketTower rT = new RocketTower(towerTextureList[3], 4, position, baseTexture, bulletTextureList[3]);
-                    rocketTowerList.Add(rT);
-                }
+                RocketTower rT = new RocketTower(towerTextureList[3], 4, MouseManager.position, baseTexture, bulletTextureList[3]);
+                rocketTowerList.Add(rT);
             }
+           // }
            
 
             //Update Towers
@@ -151,12 +155,12 @@ namespace TowerDefenseOOP
         //Hàm Draw
         public void Draw(SpriteBatch spriteBatch)
         {
-            Color color;
-            if (isTowerAvailable(position))
-                color = Color.Blue;
-            else
-                color = Color.Red;
-            spriteBatch.Draw(mouseTexture, position, null, color*0.5f, 0f, origin, (float)Container.tileSize*scale / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+            //Color color;
+            //if (isTowerAvailable(position))
+            //    color = Color.Blue;
+            //else
+            //    color = Color.Red;
+            //spriteBatch.Draw(mouseTexture, position, null, color*0.5f, 0f, origin, (float)Container.tileSize*scale / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             foreach(RocketTower rk in rocketTowerList)
             {
                 if(rk.IsAlive)
