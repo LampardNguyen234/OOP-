@@ -25,6 +25,7 @@ namespace TowerDefenseOOP
         int level;
         float scale;
         public static int buildTower;
+        private int tempBuildTower;
 
         public int Level
         {
@@ -47,6 +48,7 @@ namespace TowerDefenseOOP
             this.scale = Container.enemyTextureScale;
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
             buildTower = -1;
+            tempBuildTower = -1;
             isBuildingTower = false;
         }
 
@@ -96,13 +98,13 @@ namespace TowerDefenseOOP
         //Load content
         public void LoadContent(ContentManager content)
         {
-            for (int i = 0; i < 6;i++)
+            for (int i = 0; i < 6; i++)
             {
                 string s = "tower_00" + i.ToString() + "_build";
                 Texture2D sTemp = content.Load<Texture2D>(s);
                 towerTextureList.Add(sTemp);
             }
-                mouseTexture = content.Load<Texture2D>("hover");
+            mouseTexture = content.Load<Texture2D>("hover");
             radiusTexture = content.Load<Texture2D>("radius");
             addToMap();
         }
@@ -116,9 +118,14 @@ namespace TowerDefenseOOP
             buildTower = -1;
 
             //Hàm lấy giá trị và trạng thái chọn tháp để mang vào map xây
-            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900)
+            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900 && position.X<1000)
             {
-                buildTower = 2;//Giá trị trả về từ hàm isClick() trong Menu
+                tempBuildTower = 0;//Giá trị trả về từ hàm isClick() trong Menu
+                isBuildingTower = true;
+            }
+            else if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 1000)
+            {
+                tempBuildTower = 3;
                 isBuildingTower = true;
             }
 
@@ -126,7 +133,7 @@ namespace TowerDefenseOOP
             if (mouseState.RightButton == ButtonState.Released && oldState.RightButton == ButtonState.Pressed && isBuildingTower)
             {
                 isBuildingTower = false;
-                buildTower = -1;
+                tempBuildTower = -1;
             }
 
 
@@ -135,7 +142,8 @@ namespace TowerDefenseOOP
             {
                 if (checkTowerAvailable(position))
                 {
-                    buildTower = 1;
+                    buildTower = tempBuildTower;
+                    tempBuildTower = -1;
                     isBuildingTower = false;
                 }
             }
@@ -154,8 +162,8 @@ namespace TowerDefenseOOP
             if (isBuildingTower)
             {
                 color = color * 0.5f;
-                spriteBatch.Draw(towerTextureList[3], position, null, Color.White, 0f, origin, (float)Container.towerSize / (float)towerTextureList[1].Width, SpriteEffects.None, 0f);
-                spriteBatch.Draw(radiusTexture, position, null, Color.Green*0.5f, 0f, new Vector2(224/2,224/2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+                spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, Color.White, 0f, origin, (float)Container.towerSize / (float)towerTextureList[1].Width, SpriteEffects.None, 0f);
+                spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.5f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }
             else color = color * 0f;
             spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
