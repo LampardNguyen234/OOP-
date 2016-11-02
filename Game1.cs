@@ -21,7 +21,6 @@ namespace TowerDefenseOOP
         Map map = new Map();
         Texture2D healthbar;
         Player player;
-        MouseManager mouseManager;
         List<Enemy> enemyList = new List<Enemy>();
         List<Texture2D> enemyTextureList = new List<Texture2D>();
         Level level;
@@ -84,9 +83,7 @@ namespace TowerDefenseOOP
             int maplevel = 1;
             level = new Level(map, maplevel);
             level.LoadContent(Content);
-            mouseManager = new MouseManager(map, 1);
             player = new Player(map, maplevel);
-            mouseManager.LoadContent(Content);
             player.LoadContent(Content);
             healthbar = Content.Load<Texture2D>("healthbar");
             for (int i = 0; i < Container.numberOfEnemies;i++ )
@@ -140,7 +137,6 @@ namespace TowerDefenseOOP
         protected override void Update(GameTime gameTime)
         {
             MouseState mouse = Mouse.GetState();
-            mouseManager.Update(gameTime);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             //Tu update MainMenu
@@ -282,7 +278,6 @@ namespace TowerDefenseOOP
                     //<End>
                     break;
             }
-            mouseManager.Draw(spriteBatch);
             spriteBatch.End();
 
             

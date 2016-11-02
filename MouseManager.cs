@@ -15,7 +15,7 @@ namespace TowerDefenseOOP
         public static Vector2 position;
         MouseState mouseState;
         Texture2D mouseTexture;
-        Texture2D towerTexture;
+        List<Texture2D> towerTextureList = new List<Texture2D>();
         Texture2D radiusTexture;
         MouseState oldState;
         List<Tower> towerList;
@@ -23,6 +23,7 @@ namespace TowerDefenseOOP
         private Vector2 origin;
         private bool isBuildingTower;
         int level;
+        float scale;
         public static int buildTower;
 
         public int Level
@@ -43,7 +44,7 @@ namespace TowerDefenseOOP
         {
             this.map = map;
             this.level = level;
-            //this.towerList = towerList;
+            this.scale = Container.enemyTextureScale;
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
             buildTower = -1;
             isBuildingTower = false;
@@ -81,7 +82,7 @@ namespace TowerDefenseOOP
             if (position.X > 870) return false;
             foreach (Vector2 roadCenter in roadCenters)
             {
-                if (Vector2.Distance(position, roadCenter) < (float)Container.towerSize)
+                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize * (scale + 0.05f))
                     return false;
             }
             foreach (Vector2 rockCenter in rockCenters)
@@ -89,19 +90,19 @@ namespace TowerDefenseOOP
                 if (Vector2.Distance(position, rockCenter) < (float)Container.towerSize * 2)
                     return false;
             }
-            //foreach (Tower tower in towerList)
-            //{
-            //    if (Vector2.Distance(position, tower.Center) < (float)Container.towerSize)
-            //        return false;
-            //}
             return true;
         }
 
         //Load content
         public void LoadContent(ContentManager content)
         {
-            mouseTexture = content.Load<Texture2D>("hover");
-            towerTexture = content.Load<Texture2D>("tower_003");
+            for (int i = 0; i < 6;i++)
+            {
+                string s = "tower_00" + i.ToString() + "_build";
+                Texture2D sTemp = content.Load<Texture2D>(s);
+                towerTextureList.Add(sTemp);
+            }
+                mouseTexture = content.Load<Texture2D>("hover");
             radiusTexture = content.Load<Texture2D>("radius");
             addToMap();
         }
@@ -153,7 +154,7 @@ namespace TowerDefenseOOP
             if (isBuildingTower)
             {
                 color = color * 0.5f;
-                spriteBatch.Draw(towerTexture, position, null, Color.White, 0f, origin, (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+                spriteBatch.Draw(towerTextureList[3], position, null, Color.White, 0f, origin, (float)Container.towerSize / (float)towerTextureList[1].Width, SpriteEffects.None, 0f);
                 spriteBatch.Draw(radiusTexture, position, null, Color.Green*0.5f, 0f, new Vector2(224/2,224/2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }
             else color = color * 0f;

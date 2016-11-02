@@ -12,15 +12,16 @@ namespace TowerDefenseOOP
     class RocketTower:Tower
     {
 
+        List<Enemy> oldTargetList = new List<Enemy>();  //Danh sách chưa các target ra khỏi bán kính nhưng chưa chết
         public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture):
             base(level,position,baseTexture,texture,bulletTexture)
         {
-            radius = Container.radiusMax;
+            radius = Container.radiusMax/2;
             attack = Container.attackMax;
             price = 1200;
             smallestRange = radius;
-            timer = 5000f; 
-            interval = 5000f;
+            timer = 4000f; 
+            interval = Container.intervalmax;
         }
 
 
@@ -40,7 +41,7 @@ namespace TowerDefenseOOP
                     if (target != null)
                     {
                         //Tạo bullet
-                        Bullet bullet = new Bullet(position, level, bulletTexture, target.Center);
+                        Bullet bullet = new Bullet(position, level, bulletTexture, target);
                         bulletList.Add(bullet);
                         //Thay đổi khung hình
                         frame++;
@@ -63,11 +64,11 @@ namespace TowerDefenseOOP
                 else
                 {
                     if (target != null)
-                        bullet.FollowTarget(target.Center); //Nếu đã ra khỏi tower thì đuổi theo target (Đối với tên lửa)
+                        bullet.FollowTarget(); //Nếu đã ra khỏi tower thì đuổi theo target (Đối với tên lửa)
                 }
-                if(Collision(bullet))               //Trường hợp bullet đụng target
+                if(bullet.Collision())               //Trường hợp bullet đụng target
                 {
-                    target.CurrentHP -= attack;
+                    bullet.target.CurrentHP -= attack;
                     bullet.Kill();
                 }
 
@@ -80,9 +81,22 @@ namespace TowerDefenseOOP
             }
             
             FaceTarget();           //Quay tower về phía target
-            if (!IsInRange(target) || target.IsAlive==false)
-                target = null;
-            BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
+            if (target != null)
+            {
+                if (!IsInRange(target) && target.IsAlive)
+                    oldTargetList.Add(target);
+                if (target.IsAlive == false || !IsInRange(target))
+                    target = null;
+            }
+            for (int i = 0; i < oldTargetList.Count;i++)        //Cập nhật hoặc xóa oldTarget
+            {
+                if (oldTargetList[i].IsAlive == false)
+                {
+                    oldTargetList.RemoveAt(i);
+                    i--;
+                }
+            }
+                BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
         }
 
     }

@@ -15,8 +15,8 @@ namespace TowerDefenseOOP
         Vector2 position;
         Vector2 velocity;
         Vector2 origin;
-        Vector2 target;
         Vector2 center;
+        public Enemy target;
 
         public Vector2 Center
         {
@@ -41,7 +41,7 @@ namespace TowerDefenseOOP
 
         #endregion
 
-        public Bullet(Vector2 position, int level, Texture2D bulletTexture, Vector2? target)
+        public Bullet(Vector2 position, int level, Texture2D bulletTexture, Enemy target)
         {
             texture = bulletTexture;
             this.position = position;
@@ -50,8 +50,7 @@ namespace TowerDefenseOOP
             rotation = 0;
             age = 0;
             velocity = new Vector2(0, 0);
-            if(target.HasValue)
-                 this.target = target.Value;
+            this.target = target;
         }
 
         public bool IsDead()
@@ -74,16 +73,28 @@ namespace TowerDefenseOOP
         }
 
         //Đuổi theo target
-        public void FollowTarget(Vector2 target)
+        public void FollowTarget()
         {
-            Vector2 distance = target - center;
+            if (target == null)
+                return;
+            Vector2 distance = target.Center - center;
             distance.Normalize();
             rotation = -(float)Math.Atan2(distance.X, distance.Y) - (float)Math.PI/2;
-
             velocity = Vector2.Transform(new Vector2(-speed, 0)
                 , Matrix.CreateRotationZ(rotation));//Need Fixing
         }
-        
+
+        public bool Collision()
+        {
+            if (target == null)
+                return false;
+            Vector2 distance = Center - target.Center;
+            if (Math.Abs(distance.Y) <= Container.enemyTextureSize * Container.enemyTextureScale / 2)
+                if (Math.Abs(distance.X) <= Container.enemyTextureSize * Container.enemyTextureScale / 2)
+                    return true;
+            return false;
+        }
+
         //Hàm Update
         public void Update(GameTime gameTime)
         {

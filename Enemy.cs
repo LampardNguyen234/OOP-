@@ -39,7 +39,7 @@ namespace TowerDefenseOOP
         private int level;              //Level của enemy, level càng cao, enemy càng mạnh
         private float speed;            //Tốc độ di chuyển của enemy
         private float textureInterval;  //Tốc độ thay đổi hình ảnh texture
-        private float healthPercent;
+        private float healthPercent;    //Phần trăm máu
         private float timer;            //Biến đếm thời gian thay đổi hình ảnh texture
         private bool isAlive;           //Biến kiểm tra enemy còn sống hay đã chết
         private int enemyTextureHeight;

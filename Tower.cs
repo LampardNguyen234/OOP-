@@ -50,8 +50,7 @@ namespace TowerDefenseOOP
             set { this.center = value; }
         }
 
-
-        public Enemy target;
+        protected Enemy target;
 
         public Enemy Target
         {
@@ -61,9 +60,16 @@ namespace TowerDefenseOOP
         protected float timer;
         protected float interval;
         protected Rectangle BoundingBox;   //Khung hình texture
-        #endregion
-        //Constructor
+        private bool isUpgraded;        //Kiểm tra xem tower đã được nâng cấp chưa
 
+        protected bool IsUpgraded
+        {
+            get { return isUpgraded; }
+            set { isUpgraded = value; }
+        }
+        #endregion
+
+        //Constructor
         public Tower(int level, Vector2 position, Texture2D baseTexture, Texture2D towerTexture, Texture2D bulletTexture)
         {
             this.bulletTexture = bulletTexture;
@@ -80,6 +86,7 @@ namespace TowerDefenseOOP
             frame = 0;
             frameMaxX = towerTexture.Width / Container.towerSize;
             BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);
+            isUpgraded = false;
         }
 
         //Kiểm tra xem enemy có nằm trong bán kính không
@@ -87,7 +94,7 @@ namespace TowerDefenseOOP
         {
             if (target == null)
                 return false;
-            if (Vector2.Distance(center, target.Center) <= radius)
+            if (Vector2.Distance(position, target.Center) <= radius)
                 return true;
 
             return false;
@@ -99,12 +106,12 @@ namespace TowerDefenseOOP
             target = null;
             foreach (Enemy enemy in enemyList)
             {
-                if (Vector2.Distance(position, enemy.Center) < radius)
-                {
-                    smallestRange = Vector2.Distance(position, enemy.Center);
-                    target = enemy;
-                    return;
-                }
+                smallestRange = radius;
+                    if (Vector2.Distance(position, enemy.Center) < radius)
+                    {
+                            target = enemy;
+                            return;
+                    }
             }
         }
 
@@ -164,6 +171,16 @@ namespace TowerDefenseOOP
             if (tempX >= 0 && tempY >= 0)
                 return false;
             return true;
+        }
+
+        //Hàm nâng cấp Tower
+        public void Upgrade()
+        {
+            radius += Container.radiusMax / 10;
+            attack += Container.attackMax / 10;
+            interval -= Container.intervalmax / 5;
+            price += price % 10 / 100;
+            IsUpgraded = true;
         }
     }
 }

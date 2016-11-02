@@ -70,6 +70,7 @@ namespace TowerDefenseOOP
 
         public static float radiusMax = 300;
         public static int attackMax = 50;
+        public static float intervalmax = 4000f;
         public static int tower1Price = 50;
         //<End>
     }

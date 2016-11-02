@@ -23,7 +23,6 @@ namespace TowerDefenseOOP
         List<Enemy> enemyList = new List<Enemy>();
 
         private Texture2D baseTexture;
-        float scale;
         int level;
         public int Level
         {
@@ -44,7 +43,6 @@ namespace TowerDefenseOOP
             this.map = map.MapList[level - 1];              //Tùy vào level sẽ có map khác nhau
             this.level = level;                             //Level của màn chơi
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
-            this.scale = Container.enemyTextureScale;
         }
 
         //Hàm LoadContent
