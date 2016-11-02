@@ -84,7 +84,7 @@ namespace TowerDefenseOOP
                 , Matrix.CreateRotationZ(rotation));//Need Fixing
         }
 
-        public bool Collision()
+        public bool Collision()     //Kiểm tra sự đụng độ giữa bullet và target
         {
             if (target == null)
                 return false;

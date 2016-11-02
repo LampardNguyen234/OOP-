@@ -14,18 +14,24 @@ namespace TowerDefenseOOP
     /// </summary>
     class EnhancingTower:Tower
     {
-        
         public EnhancingTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
             base(level,position,baseTexture,texture,bulletTexture)
         {
             radius = Container.radiusMax /2;
             attack = 0;
-            price = 500;
+            price = 400;
             smallestRange=0;
             timer = 0f; 
             interval = 0f;
         }
-
+        
+        //
+        public bool IsInRange(RocketTower rk)
+        {
+            if (Vector2.Distance(rk.Position, position) <= radius)
+                return true;
+            return false;
+        }
 
     }
 }

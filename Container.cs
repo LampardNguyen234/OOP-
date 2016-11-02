@@ -40,7 +40,7 @@ namespace TowerDefenseOOP
 
         public static int basicEnemySpeed = 1;
 
-        public static int numberOfTowers = 4;
+        public static int numberOfTowers = 6;
 
         public static int numberOfEnemies = 4;
 

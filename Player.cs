@@ -19,7 +19,7 @@ namespace TowerDefenseOOP
         List<Texture2D> bulletTextureList = new List<Texture2D>();
         List<Texture2D> towerTextureList = new List<Texture2D>();
         List<Texture2D> enemyTextureList = new List<Texture2D>();
-        List<MachineGunTower> MachineGunTowerList = new List<MachineGunTower>();
+        List<LazeTower> lazeTowerList = new List<LazeTower>();
         List<RocketTower> rocketTowerList = new List<RocketTower>();
         List<Enemy> enemyList = new List<Enemy>();
 
@@ -53,53 +53,6 @@ namespace TowerDefenseOOP
             mouseState = oldState;
         }
 
-        //Hàm lấy vào tất cả các ô nằm trên đường đi add vào roadCenters và các ô chứa đá add vào rockCenters
-        //public void addPositions()
-        //{
-        //    Vector2 temp = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
-        //    for(int y=0;y<Container.MapHeight;y++)
-        //    {
-        //        for(int x=0;x<Container.MapWidth;x++)
-        //        {
-        //            if(map[y,x]==1)//Chỉ số các ô nằm trên đường đi bằng 1
-        //            {
-        //                Vector2 temp2 = new Vector2(x, y) * Container.tileSize + temp;//Lấy vị trí tâm của ô 
-        //                roadCenters.Add(temp2);  //Thêm vào list
-        //            }
-        //            if (map[y, x] == 2)//Chỉ số các ô chứa đá bằng 2
-        //            {
-        //                Vector2 temp2 = new Vector2(x, y) * Container.tileSize + temp;//Lấy vị trí tâm của ô 
-        //                rockCenters.Add(temp2);  //Thêm vào list
-        //            }
-        //        }
-        //    }
-        //}
-
-        //Hàm kiểm tra xem có thể xây Tower ở vị trí nhập vào không
-
-        //public bool isTowerAvailable(Vector2 position)
-        //{
-        //    int width = Container.MapWidth;
-        //    int height = Container.MapHeight;
-        //    foreach (Vector2 roadCenter in roadCenters)
-        //    {
-        //        if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize*(scale+0.05f))
-        //            return false;
-        //    }
-        //    foreach (Vector2 rockCenter in rockCenters)
-        //    {
-        //        if (Vector2.Distance(position, rockCenter) < (float)Container.tileSize * 2)
-        //            return false;
-        //    }
-        //    foreach (MachineGunTower rk in MachineGunTowerList)
-        //    {
-        //        if (Vector2.Distance(position, rk.Position) < (float)Container.towerSize * (scale + 0.05f))
-        //            return false;
-        //    }
-        //    return true;
-        //}
-
-
         //Hàm LoadContent
         public void LoadContent(ContentManager content)
         {
@@ -108,8 +61,11 @@ namespace TowerDefenseOOP
             mouseManager.LoadContent(content);
             for (int i = 0; i < Container.numberOfTowers;i++ )
             {
-                Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
-                bulletTextureList.Add(bullet);
+                if (i < 5 &&i!=3)      //Chỉ có 4  tower có đạn
+                {
+                    Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
+                    bulletTextureList.Add(bullet);
+                }
                 Texture2D tower = content.Load<Texture2D>("tower_00" + i.ToString());
                 towerTextureList.Add(tower);
             }
@@ -126,15 +82,29 @@ namespace TowerDefenseOOP
         public void Update(GameTime gameTime, List<Enemy> enemyList)
         {
             mouseManager.Update(gameTime);
-            if (MouseManager.buildTower == 3)
+            switch (MouseManager.buildTower)
             {
-                RocketTower rT = new RocketTower(towerTextureList[3], 4, MouseManager.position, baseTexture, bulletTextureList[3]);
-                rocketTowerList.Add(rT);
-            }
-            else if (MouseManager.buildTower == 0)
-            {
-                MachineGunTower mgT = new MachineGunTower(towerTextureList[0], 4, MouseManager.position, baseTexture, bulletTextureList[0]);
-                MachineGunTowerList.Add(mgT);
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                {
+                    LazeTower lt = new LazeTower(towerTextureList[3], 3, MouseManager.position, baseTexture, bulletTextureList[0]);
+                    lazeTowerList.Add(lt);
+                    break;
+                }
+                case 4:
+                {
+                    RocketTower rT = new RocketTower(towerTextureList[4], 4, MouseManager.position, baseTexture, bulletTextureList[3]);
+                    rocketTowerList.Add(rT);
+                    break;
+                }
+                case 5:
+                    break;
+            
             }
 
             //Update Towers
@@ -148,13 +118,13 @@ namespace TowerDefenseOOP
                     i--;
                 }
             }
-            for (int i = 0; i < MachineGunTowerList.Count; i++)
+            for (int i = 0; i < lazeTowerList.Count; i++)
             {
-                if (MachineGunTowerList[i].IsAlive)
-                    MachineGunTowerList[i].Update(gameTime, enemyList);
+                if (lazeTowerList[i].IsAlive)
+                    lazeTowerList[i].Update(gameTime, enemyList);
                 else
                 {
-                    MachineGunTowerList.RemoveAt(i);
+                    lazeTowerList.RemoveAt(i);
                     i--;
                 }
             }
@@ -172,11 +142,11 @@ namespace TowerDefenseOOP
                 }
             }
 
-            foreach (MachineGunTower mgT in MachineGunTowerList)
+            foreach (LazeTower lt in lazeTowerList)
             {
-                if (mgT.IsAlive)
+                if (lt.IsAlive)
                 {
-                    mgT.Draw(spriteBatch);
+                    lt.Draw(spriteBatch);
                 }
             }
             //Vẽ enemy
