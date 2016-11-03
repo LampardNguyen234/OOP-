@@ -10,9 +10,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TowerDefenseOOP
 {
-    class LazeTower:Tower
+    class LazerTower:Tower
     {
-        public LazeTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
+        public LazerTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
             base(level,position,baseTexture,texture,bulletTexture)
         {
             radius = 5*Container.radiusMax /10;

@@ -11,16 +11,22 @@ namespace TowerDefenseOOP
 {
     class DualMachineGunTower:Tower
     {
+        float change;
+        Vector2 changeT;
+        Texture2D animation;
         //Constructor
         public DualMachineGunTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
             base(level,position,baseTexture,texture,bulletTexture)
         {
             radius = 100f;
-            attack = 5;
+            attack = 10;
             price = 100;
             smallestRange = radius;
             timer = 400f;
             interval = 400f;
+            change = 10;
+            changeT = Vector2.Transform(new Vector2(0, change)
+                , Matrix.CreateRotationZ(rotation+0.1f));
         }
 
         //Update
@@ -36,10 +42,12 @@ namespace TowerDefenseOOP
             {
                 if (target != null)
                 {
+                    changeT = Vector2.Transform(new Vector2(0, change)
+                , Matrix.CreateRotationZ(rotation+0.5f));
                     //Tạo bullet
-                    Bullet bullet1 = new Bullet(position, level, bulletTexture, target.Center);
+                    Bullet bullet1 = new Bullet(position+changeT, level, bulletTexture, target);
                     bulletList.Add(bullet1);
-                    Bullet bullet2 = new Bullet(new Vector2(position.X+10,position.Y), level, bulletTexture, target.Center);
+                    Bullet bullet2 = new Bullet(position-changeT, level, bulletTexture, target);
                     bulletList.Add(bullet2);
                 }
 
@@ -50,15 +58,14 @@ namespace TowerDefenseOOP
                 Bullet bullet = bulletList[i];
                 if (target == null)
                     bullet.Kill();
-                if (!CheckBulletOutOfTower(bullet))
-                    bullet.SetRotation(rotation);
+                bullet.SetRotation(rotation);
+                //Kiểm tra đạn collision với target
                 if (Collision(bullet))
                 {
                     target.CurrentHP -= attack;
                     bullet.Kill();
                 }
-
-             
+                //Kiểm tra xem đạn đã chết chưa
                 if (bullet.IsDead())
                 {
                     bulletList.Remove(bullet);

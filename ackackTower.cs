@@ -14,12 +14,12 @@ namespace TowerDefenseOOP
         public ackackTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture):
             base(level,position,baseTexture,texture,bulletTexture)
         {
-            radius = 90f;
-            attack = 25;
+            radius = 100f;
+            attack = 7;
             price = 250;
             smallestRange = radius;
-            timer = 3000f;
-            interval = 3000f;
+            timer = 300f;
+            interval = 300f;
         }
 
         //Update
@@ -36,7 +36,7 @@ namespace TowerDefenseOOP
                 if (target != null)
                 {
                     //Tạo bullet
-                    Bullet bullet = new Bullet(position, level, bulletTexture, target.Center);
+                    Bullet bullet = new Bullet(position, level, bulletTexture, target);
                     bulletList.Add(bullet);
                 }
                 timer = 0;

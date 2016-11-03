@@ -128,15 +128,14 @@ namespace TowerDefenseOOP
         //Draw
         public void Draw(SpriteBatch spriteBatch)
         {
+            foreach (Bullet bullet in bulletList)
+            {
+                bullet.Draw(spriteBatch);
+            }
             if (isAlive)
             {
                 spriteBatch.Draw(baseTexture, position, null, Color.White, 0f, origin1, 0.7f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
-            }
-            foreach (Bullet bullet in bulletList)
-            {
-                if (CheckBulletOutOfTower(bullet))
-                    bullet.Draw(spriteBatch);
             }
         }
 
