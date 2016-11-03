@@ -100,11 +100,11 @@ namespace TowerDefenseOOP
         {
             for (int i = 0; i < 6; i++)
             {
-                string s = "tower_00" + i.ToString() + "_build";
+                string s = "tower_00" + i.ToString();
                 Texture2D sTemp = content.Load<Texture2D>(s);
                 towerTextureList.Add(sTemp);
             }
-            mouseTexture = content.Load<Texture2D>("hover");
+            mouseTexture = content.Load<Texture2D>("base");
             radiusTexture = content.Load<Texture2D>("radius");
             addToMap();
         }
@@ -125,7 +125,7 @@ namespace TowerDefenseOOP
             }
             else if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 1000)
             {
-                tempBuildTower = 3;
+                tempBuildTower = 1;
                 isBuildingTower = true;
             }
 
@@ -156,17 +156,16 @@ namespace TowerDefenseOOP
         {
             Color color;
             if (checkTowerAvailable(position))
-                color = Color.Blue;
+                color = Color.White;
             else
                 color = Color.Red;
             if (isBuildingTower)
             {
-                color = color * 0.5f;
-                spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, Color.White, 0f, origin, (float)Container.towerSize / (float)towerTextureList[1].Width, SpriteEffects.None, 0f);
-                spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.5f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+                spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+                if(tempBuildTower!=-1)
+                    spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, color, 0f, origin, (float)Container.towerSize / (float)towerTextureList[tempBuildTower].Width, SpriteEffects.None, 0f);
+                spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }
-            else color = color * 0f;
-            spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
 
         }
     }
