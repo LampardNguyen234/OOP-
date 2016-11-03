@@ -21,6 +21,7 @@ namespace TowerDefenseOOP
         List<DualMachineGunTower> dualMachineTowerList = new List<DualMachineGunTower>();
         List<LazerTower> lazeTowerList = new List<LazerTower>();
         List<RocketTower> rocketTowerList = new List<RocketTower>();
+        List<EnhancingTower> enhancingTowerList = new List<EnhancingTower>();
         List<Enemy> enemyList = new List<Enemy>();
 
         private Texture2D mouseTexture;     //Texture dùng để check vị trí xây dựng tower có hợp lệ không
@@ -81,6 +82,7 @@ namespace TowerDefenseOOP
         public void Update(GameTime gameTime, List<Enemy> enemyList)
         {
             mouseManager.Update(gameTime);
+            #region Xây dựng các tower
             switch (MouseManager.buildTower)
             {
                 case 0:
@@ -115,9 +117,15 @@ namespace TowerDefenseOOP
                     break;
                 }
                 case 5:
+                {
+                    //Trường hợp Tháp tăng cường năng lượng
+                    EnhancingTower eT = new EnhancingTower(towerTextureList[5], 5, MouseManager.position, baseTexture, null);
+                    enhancingTowerList.Add(eT);
                     break;
-            
+                }
+
             }
+            #endregion
 
             //Update Towers
             towerUpdate(gameTime, enemyList);
@@ -190,6 +198,15 @@ namespace TowerDefenseOOP
                     i--;
                 }
             }
+
+            foreach(EnhancingTower eT in enhancingTowerList)
+            {
+                eT.Enhancing(ackackTowerList);
+                eT.Enhancing(dualMachineTowerList);
+                eT.Enhancing(lazeTowerList);
+                eT.Enhancing(rocketTowerList);
+            }
+
         }
 
         public void towerDraw(SpriteBatch spriteBatch)

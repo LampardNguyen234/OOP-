@@ -166,7 +166,6 @@ namespace TowerDefenseOOP
                     spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, color, 0f, origin, (float)Container.towerSize / (float)towerTextureList[tempBuildTower].Width, SpriteEffects.None, 0f);
                 spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }
-
         }
     }
 }

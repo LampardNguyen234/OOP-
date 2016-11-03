@@ -60,12 +60,19 @@ namespace TowerDefenseOOP
         protected float timer;
         protected float interval;
         protected Rectangle BoundingBox;   //Khung hình texture
-        private bool isUpgraded;        //Kiểm tra xem tower đã được nâng cấp chưa
+        protected bool isUpgradedByTower;        //Kiểm tra xem tower đã được nâng cấp bởi các EnhancingTower chưa
 
-        protected bool IsUpgraded
+        public bool IsUpgradedByTower
         {
-            get { return isUpgraded; }
-            set { isUpgraded = value; }
+            get { return isUpgradedByTower; }
+            set { isUpgradedByTower = value; }
+        }
+        protected bool isUpgradedByPlayer;      //Kiểm tra xem tower đã được nâng cấp bởi player chưa
+
+        public bool IsUpgradedByPlayer
+        {
+            get { return isUpgradedByPlayer; }
+            set { isUpgradedByPlayer = value; }
         }
         #endregion
 
@@ -86,7 +93,8 @@ namespace TowerDefenseOOP
             frame = 0;
             frameMaxX = towerTexture.Width / Container.towerSize;
             BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);
-            isUpgraded = false;
+            isUpgradedByPlayer = false;
+            isUpgradedByTower = false;
         }
 
         //Kiểm tra xem enemy có nằm trong bán kính không

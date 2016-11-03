@@ -24,14 +24,74 @@ namespace TowerDefenseOOP
             timer = 0f; 
             interval = 0f;
         }
-        
-        //
-        public bool IsInRange(RocketTower rk)
+
+        #region Nâng cấp các tower nằm trong bán kinh
+
+        //Upgrade AckAck
+        public void Enhancing(List<ackackTower> aaList)
         {
-            if (Vector2.Distance(rk.Position, position) <= radius)
-                return true;
-            return false;
+            foreach (ackackTower aa in aaList)
+            {
+                if (Vector2.Distance(aa.Position, position) <= radius)
+                {
+                    if (aa.IsUpgradedByTower == false)
+                    {
+                        aa.Upgrade();
+                        aa.IsUpgradedByTower = true;
+                    }
+                }
+            }
         }
+
+        //Upgrade DualGun
+        public void Enhancing(List<DualMachineGunTower> dmList)
+        {
+            foreach (DualMachineGunTower dm in rkList)
+            {
+                if (Vector2.Distance(dm.Position, position) <= radius)
+                {
+                    if (dm.IsUpgradedByTower == false)
+                    {
+                        dm.Upgrade();
+                        dm.IsUpgradedByTower = true;
+                    }
+                }
+            }
+        }
+
+        //Upgrade LazerTower
+        public void Enhancing(List<LazerTower> lzList)
+        {
+            foreach (LazerTower lz in lzList)
+            {
+                if (Vector2.Distance(lz.Position, position) <= radius)
+                {
+                    if (lz.IsUpgradedByTower == false)
+                    {
+                        lz.Upgrade();
+                        lz.IsUpgradedByTower = true;
+                    }
+                }
+            }
+        }
+
+        //Upgrade RocketTower
+        public void Enhancing(List<RocketTower> rkList)
+        {
+            foreach (RocketTower rk in rkList)
+            {
+                if (Vector2.Distance(rk.Position, position) <= radius)
+                {
+                    if (rk.IsUpgradedByTower == false)
+                    {
+                        rk.Upgrade();
+                        rk.IsUpgradedByTower = true;
+                    }
+                }
+            }
+        }
+
+        #endregion
 
     }
 }
