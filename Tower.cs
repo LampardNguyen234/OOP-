@@ -187,7 +187,7 @@ namespace TowerDefenseOOP
             attack += Container.attackMax / 10;
             interval -= Container.intervalmax / 5;
             price += price % 10 / 100;
-            IsUpgraded = true;
+            IsUpgradedByPlayer = true;
         }
     }
 }

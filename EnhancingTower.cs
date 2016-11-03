@@ -46,7 +46,7 @@ namespace TowerDefenseOOP
         //Upgrade DualGun
         public void Enhancing(List<DualMachineGunTower> dmList)
         {
-            foreach (DualMachineGunTower dm in rkList)
+            foreach (DualMachineGunTower dm in dmList)
             {
                 if (Vector2.Distance(dm.Position, position) <= radius)
                 {
