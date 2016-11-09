@@ -39,13 +39,12 @@ namespace TowerDefenseOOP
           towerButton specialSkill2Button;
           towerButton specialSkill3Button;
 
+          public Container.GameState GameState;
 
-    
-          GraphicsDeviceManager graphics;
-        public buttonManager(GraphicsDeviceManager Graphics)
+        GraphicsDeviceManager graphics;
+        public buttonManager(GraphicsDeviceManager graphics)
         {
-   
-            graphics = Graphics;
+            this.graphics = graphics;
         }
         public  void LoadContent(ContentManager Content)
         {
@@ -122,9 +121,9 @@ namespace TowerDefenseOOP
             playMenuTexture = Content.Load<Texture2D>("PlayMenu");
 
         }
-        public void Update(Container.GameState GameState,MouseState mouse,int goldHave,GameTime gameTime)
+        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime)
         {
-            
+            GameState = CurrentState;
             switch (GameState)
             {
                 case Container.GameState.MainMenu:

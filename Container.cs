@@ -48,7 +48,7 @@ namespace TowerDefenseOOP
         //button
         //<Start>
 
-        public  enum GameState
+        public enum GameState
         {
             MainMenu = 0,
             Intro,
