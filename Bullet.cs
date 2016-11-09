@@ -107,7 +107,7 @@ namespace TowerDefenseOOP
         {
             if (!IsDead())
             {
-                spriteBatch.Draw(texture, center, null, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, center, null, Color.White*2f, rotation, origin, 1.0f, SpriteEffects.None, 0f);
             }
             else
                 return;

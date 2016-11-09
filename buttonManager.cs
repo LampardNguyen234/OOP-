@@ -41,6 +41,14 @@ namespace TowerDefenseOOP
 
           public Container.GameState GameState;
 
+          int retButton;
+
+          public int RetButton
+          {
+              get { return this.retButton; }
+              set { this.retButton = value; }
+          }
+
         GraphicsDeviceManager graphics;
         public buttonManager(GraphicsDeviceManager graphics)
         {
@@ -157,6 +165,7 @@ namespace TowerDefenseOOP
                     backButton.Update(mouse);
                     break;
                 case Container.GameState.Playing:
+                    retButton = -1;
                     if (pauseButton.isClicked == true)
                         GameState = Container.GameState.Pausing;
                     pauseButton.Update(mouse);
@@ -172,6 +181,32 @@ namespace TowerDefenseOOP
                     specialSkill1Button.Update(mouse, goldHave);
                     specialSkill2Button.Update(mouse, goldHave);
                     specialSkill3Button.Update(mouse, goldHave);
+                    if (tower1Button.isClicked == true) 
+                        RetButton = 0;
+                    if (tower2Button.isClicked == true)
+                        RetButton = 1;
+                    if (tower3Button.isClicked == true)
+                        RetButton = 2;
+                    if (tower4Button.isClicked == true)
+                        RetButton = 3;
+                    if (tower5Button.isClicked == true)
+                        RetButton = 4;
+                    if (tower6Button.isClicked == true)
+                        RetButton = 5;
+                    if (specialSkill1Button.isClicked == true)
+                        RetButton = 6;
+                    if (specialSkill2Button.isClicked == true)
+                        RetButton = 7;
+                    if (specialSkill3Button.isClicked == true)
+                        RetButton = 8;
+                    if (pauseButton.isClicked == true)
+                        RetButton = 9;
+                    if (resumeButton.isClicked == true)
+                        RetButton = 10;
+                    if (onMusicButton.isClicked == true)
+                        RetButton = 11;
+                    if (offMusicButton.isClicked == true)
+                        RetButton = 12;
                     break;
                     
             }
@@ -190,36 +225,6 @@ namespace TowerDefenseOOP
          12-offmusic
          -1 - nothing
          */
-        public int getCliked()
-        {
-            if (tower1Button.isClicked == true)
-                return 0;
-            if (tower2Button.isClicked == true)
-                return 1;
-            if (tower3Button.isClicked == true)
-                return 2;
-            if (tower4Button.isClicked == true)
-                return 3;
-            if (tower5Button.isClicked == true)
-                return 4;
-            if (tower6Button.isClicked == true)
-                return 5;
-            if (specialSkill1Button.isClicked == true)
-                return 6;
-            if (specialSkill2Button.isClicked == true)
-                return 7;
-            if (specialSkill3Button.isClicked == true)
-                return 8;
-            if (pauseButton.isClicked == true)
-                return 9;
-            if (resumeButton.isClicked == true)
-                return 10;
-            if (onMusicButton.isClicked == true)
-                return 11;
-            if (offMusicButton.isClicked == true)
-                return 12;
-            return -1;
-        }
 
         public void Draw(SpriteBatch spriteBatch,Container.GameState GameState)
         {
@@ -239,7 +244,7 @@ namespace TowerDefenseOOP
                 break;
                 case Container.GameState.Tacgia:
                 spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
-                spriteBatch.Draw(tacGiaTexture, new Rectangle(200, 50, 800, 600), Color.White);
+                spriteBatch.Draw(tacGiaTexture, new Rectangle(0, 0, tacGiaTexture.Width, tacGiaTexture.Height), Color.White);
                 backButton.Draw(spriteBatch);
 
                 break;
