@@ -169,7 +169,7 @@ namespace TowerDefenseOOP
             if (isAlive)
             {
                 spriteBatch.Draw(baseTexture, position, null, Color.White, 0f, origin1, 0.7f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
             }
             if (explosion.IsVisible)
                 explosion.Draw(spriteBatch);

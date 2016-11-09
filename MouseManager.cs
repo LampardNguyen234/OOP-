@@ -26,7 +26,6 @@ namespace TowerDefenseOOP
         float scale;
         public static int buildTower;
         private int tempBuildTower;
-
         public int Level
         {
             get { return this.level; }
@@ -81,7 +80,7 @@ namespace TowerDefenseOOP
         {
             int width = Container.MapWidth;
             int height = Container.MapHeight;
-            if (position.X > 870) return false;
+            if (position.X > 875) return false;
             foreach (Vector2 roadCenter in roadCenters)
             {
                 if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize * (scale + 0.05f))
@@ -100,7 +99,7 @@ namespace TowerDefenseOOP
         {
             for (int i = 0; i < 6; i++)
             {
-                string s = "tower_00" + i.ToString();
+                string s = "tower_00" + i.ToString() + "_build";
                 Texture2D sTemp = content.Load<Texture2D>(s);
                 towerTextureList.Add(sTemp);
             }
@@ -111,21 +110,16 @@ namespace TowerDefenseOOP
 
 
         //Update
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, int retButton)
         {
             mouseState = Mouse.GetState();
             position = new Vector2(mouseState.X, mouseState.Y);
             buildTower = -1;
 
             //Hàm lấy giá trị và trạng thái chọn tháp để mang vào map xây
-            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900 && position.X<1000)
+            if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900 && retButton!=-1)
             {
-                tempBuildTower = 0;//Giá trị trả về từ hàm isClick() trong Menu
-                isBuildingTower = true;
-            }
-            else if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 1000)
-            {
-                tempBuildTower = 1;
+                tempBuildTower = retButton;//Giá trị trả về từ hàm isClick() trong Menu
                 isBuildingTower = true;
             }
 
@@ -162,7 +156,7 @@ namespace TowerDefenseOOP
             if (isBuildingTower)
             {
                 spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
-                if(tempBuildTower!=-1)
+                if (tempBuildTower != -1)
                     spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, color, 0f, origin, (float)Container.towerSize / (float)towerTextureList[tempBuildTower].Width, SpriteEffects.None, 0f);
                 spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }

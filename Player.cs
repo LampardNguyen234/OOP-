@@ -53,7 +53,7 @@ namespace TowerDefenseOOP
             this.level = level;                             //Level của màn chơi
             origin = new Vector2(Container.towerSize / 2, Container.towerSize / 2);
             this.scale = Container.enemyTextureScale;
-            mouseState = oldState;
+            mouseState = oldState = Mouse.GetState();
         }
 
         //Hàm LoadContent
@@ -65,7 +65,7 @@ namespace TowerDefenseOOP
             explosionTexture = content.Load<Texture2D>("animation");
             for (int i = 0; i < Container.numberOfTowers;i++ )
             {
-                if (i < 5 &&i!=3)      //Chỉ có 4  tower có đạn
+                if (i < 5)     
                 {
                     Texture2D bullet = content.Load<Texture2D>("bullet_00" + i.ToString());
                     bulletTextureList.Add(bullet);
@@ -82,19 +82,19 @@ namespace TowerDefenseOOP
         }
 
         //Hàm update
-        public void Update(GameTime gameTime, List<Enemy> enemyList)
+        public void Update(GameTime gameTime, List<Enemy> enemyList, int retButton)
         {
-            mouseManager.Update(gameTime);
+            mouseManager.Update(gameTime, retButton);
             #region Xây dựng các tower
             switch (MouseManager.buildTower)
             {
                 case 0:
-                {
-                    ackackTower ackTower = new ackackTower(towerTextureList[0], 0, MouseManager.position, baseTexture, bulletTextureList[0],explosionTexture);
-                    ackackTowerList.Add(ackTower);
-                    break;
-                }
-                    break;
+                    {
+                        //Trường hợp súng máy hai nòng
+                        MachineGunTower mGT = new MachineGunTower(towerTextureList[0], 2, MouseManager.position, baseTexture, bulletTextureList[0], explosionTexture);
+                        machineGunTowerList.Add(mGT);
+                        break;
+                    }
                 case 1:
                 {
                     //Trường hợp súng máy hai nòng
@@ -104,9 +104,8 @@ namespace TowerDefenseOOP
                 }
                 case 2:
                 {
-                    //Trường hợp súng máy hai nòng
-                    MachineGunTower mGT = new MachineGunTower(towerTextureList[2], 2, MouseManager.position, baseTexture, bulletTextureList[2], explosionTexture);
-                    machineGunTowerList.Add(mGT);
+                    ackackTower ackTower = new ackackTower(towerTextureList[2], 0, MouseManager.position, baseTexture, bulletTextureList[2], explosionTexture);
+                    ackackTowerList.Add(ackTower);
                     break;
                 }
                 case 3:
@@ -133,7 +132,6 @@ namespace TowerDefenseOOP
 
             }
             #endregion
-
             //Update Towers
             towerUpdate(gameTime, enemyList);
 
@@ -158,14 +156,15 @@ namespace TowerDefenseOOP
 
         public void towerUpdate(GameTime gameTime, List<Enemy> enemyList)
         {
-            //Update ackackTower
-            for (int i = 0; i < ackackTowerList.Count; i++)
+
+            //Update MachineGunTower
+            for (int i = 0; i < machineGunTowerList.Count; i++)
             {
-                if (ackackTowerList[i].IsAlive)
-                    ackackTowerList[i].Update(gameTime, enemyList);
+                if (machineGunTowerList[i].IsAlive)
+                    machineGunTowerList[i].Update(gameTime, enemyList);
                 else
                 {
-                    ackackTowerList.RemoveAt(i);
+                    machineGunTowerList.RemoveAt(i);
                     i--;
                 }
             }
@@ -178,6 +177,18 @@ namespace TowerDefenseOOP
                 else
                 {
                     dualMachineTowerList.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            //Update ackackTower
+            for (int i = 0; i < ackackTowerList.Count; i++)
+            {
+                if (ackackTowerList[i].IsAlive)
+                    ackackTowerList[i].Update(gameTime, enemyList);
+                else
+                {
+                    ackackTowerList.RemoveAt(i);
                     i--;
                 }
             }
@@ -218,24 +229,34 @@ namespace TowerDefenseOOP
 
         public void towerDraw(SpriteBatch spriteBatch)
         {
-            //Draw ackackTower
-            foreach (ackackTower lt in ackackTowerList)
+            //Draw MachineGun
+            foreach (MachineGunTower mcgt in machineGunTowerList)
             {
-                if (lt.IsAlive)
+                if (mcgt.IsAlive)
                 {
-                    lt.Draw(spriteBatch);
+                    mcgt.Draw(spriteBatch);
                 }
             }
 
             //Draw DualMachineGun
-            foreach (DualMachineGunTower lt in dualMachineTowerList)
+            foreach (DualMachineGunTower dmcgt in dualMachineTowerList)
             {
-                if (lt.IsAlive)
+                if (dmcgt.IsAlive)
                 {
-                    lt.Draw(spriteBatch);
+                    dmcgt.Draw(spriteBatch);
                 }
             }
 
+            //Draw ackackTower
+            foreach (ackackTower aat in ackackTowerList)
+            {
+                if (aat.IsAlive)
+                {
+                    aat.Draw(spriteBatch);
+                }
+            }
+
+            
             //Draw LazerTower
             foreach (LazerTower lt in lazeTowerList)
             {
@@ -254,6 +275,14 @@ namespace TowerDefenseOOP
                 }
             }
 
+            //Draw EnhancingTower
+            foreach (EnhancingTower eht in enhancingTowerList)
+            {
+                if (eht.IsAlive)
+                {
+                    eht.Draw(spriteBatch);
+                }
+            }
         }
     }
 }
