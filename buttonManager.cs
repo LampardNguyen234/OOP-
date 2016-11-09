@@ -127,10 +127,13 @@ namespace TowerDefenseOOP
             switch (GameState)
             {
                 case Container.GameState.MainMenu:
+                    playButton.Update(mouse);
+                    creditButton.Update(mouse);
+                    introButton.Update(mouse);
+                    backButton.Update(mouse);
                     if (playButton.isClicked == true)
                     {
                         GameState = Container.GameState.Playing;
-
                     }
                     else if (creditButton.isClicked == true)
                     {
@@ -142,10 +145,6 @@ namespace TowerDefenseOOP
                         GameState = Container.GameState.Intro;
 
                     }
-                    playButton.Update(mouse);
-                    creditButton.Update(mouse);
-                    introButton.Update(mouse);
-                    backButton.Update(mouse);
                     break;
                 case Container.GameState.Intro:
                     if (backButton.isClicked == true)
