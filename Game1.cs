@@ -66,10 +66,10 @@ namespace TowerDefenseOOP
         towerButton specialSkill2Button;
         towerButton specialSkill3Button;
 
+      
         
         
-       // end
-        
+        //
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -116,6 +116,9 @@ namespace TowerDefenseOOP
             //Tu update Button
             //<Start>
             // Load button
+            //map
+           
+
 
             playButton = new cButton(Content.Load<Texture2D>("buttonPlay"), graphics.GraphicsDevice, Container.btnMenuGameSize);
             playButton.SetPosition(Container.btnPlayPosition);
@@ -198,6 +201,8 @@ namespace TowerDefenseOOP
             //<Start>
             mouse = Mouse.GetState();
             //ButtonManager.Update(CurrentState,mouse, goldHave,gameTime);
+
+            //
             switch (CurrentState)
             {
                 case Container.GameState.MainMenu:
@@ -363,6 +368,7 @@ namespace TowerDefenseOOP
             
             if (CurrentState == Container.GameState.Playing)
             {
+                
                 //animation.Draw(spriteBatch);
                 // Cac ban ve trong playing thi Update o day
                 //<Start>

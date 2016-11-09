@@ -25,7 +25,7 @@ namespace TowerDefenseOOP
         public static int healthBarHeight = 3;
         public static int healthBarWidth = 20;
         public static int enemyStartingHP = 100;
-        public static float enemyTextureScale = 0.65f;
+        public static float enemyTextureScale = 0.8f;
 
         public static int MapWidth = 15;
         public static int MapHeight = 10;
@@ -47,9 +47,22 @@ namespace TowerDefenseOOP
         // Tu update 10:17 31/10 // Button size
         //button
         //<Start>
-        public static Vector2 btnMenuGameSize = new Vector2(100, 20);
+
+        public  enum GameState
+        {
+            MainMenu = 0,
+            Intro,
+            Playing,
+            Tacgia,
+            Pausing
+
+        }
+
+        
+        public static Vector2 btnMenuGameSize = new Vector2(300, 80);
         public static Vector2 btnTowerSize = new Vector2(50, 50);
         public static Vector2 btnBackSize = new Vector2(80, 80);
+        public static Vector2 btnPauseSize = new Vector2(50, 50);
 
         public static Vector2 btnPlayPosition = new Vector2(500, 300);
 
@@ -68,10 +81,36 @@ namespace TowerDefenseOOP
         public static Vector2 btnTower5Position = new Vector2(1000, 400);
         public static Vector2 btnTower6Position = new Vector2(1100, 400);
 
+        public static Vector2 btnPausePosition = new Vector2(1000, 100);
+        public static Vector2 btnResumePosition = new Vector2(1000, 100);
+        public static Vector2 btnOffMusicPosition = new Vector2(1100, 100);
+        public static Vector2 btnOnMusicPosition = new Vector2(1100, 100);
+
+        public static Vector2 btnSpecialSkill1Button = new Vector2(1000, 500);
+        public static Vector2 btnSpecialSkill2Button = new Vector2(1070, 500);
+        public static Vector2 btnSpecialSkill3Button = new Vector2(1140, 500);
+
         public static float radiusMax = 300;
         public static int attackMax = 50;
         public static float intervalmax = 4000f;
+        
+        
+        
+        
+        
+        
+        
+        /// <summary>
+        /// Price
+        /// </summary>
+        
         public static int tower1Price = 50;
+        public static int tower2Price = 50;
+        public static int tower3Price = 50;
+        public static int tower4Price = 50;
+        public static int tower5Price = 50;
+        public static int tower6Price = 50;
+        
         //<End>
     }
 }
