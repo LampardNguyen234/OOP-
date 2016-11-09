@@ -14,8 +14,8 @@ namespace TowerDefenseOOP
     /// </summary>
     class EnhancingTower:Tower
     {
-        public EnhancingTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
-            base(level,position,baseTexture,texture,bulletTexture)
+        public EnhancingTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
+            base(level,position,baseTexture,texture,bulletTexture, explosionTexture)
         {
             radius = Container.radiusMax /2;
             attack = 0;

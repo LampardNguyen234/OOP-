@@ -19,10 +19,12 @@ namespace TowerDefenseOOP
         List<Texture2D> enemyTextureList = new List<Texture2D>();
         List<ackackTower> ackackTowerList = new List<ackackTower>();
         List<DualMachineGunTower> dualMachineTowerList = new List<DualMachineGunTower>();
+        List<MachineGunTower> machineGunTowerList = new List<MachineGunTower>();
         List<LazerTower> lazeTowerList = new List<LazerTower>();
         List<RocketTower> rocketTowerList = new List<RocketTower>();
         List<EnhancingTower> enhancingTowerList = new List<EnhancingTower>();
         List<Enemy> enemyList = new List<Enemy>();
+        private Texture2D explosionTexture;
 
         private Texture2D mouseTexture;     //Texture dùng để check vị trí xây dựng tower có hợp lệ không
         private Texture2D baseTexture;
@@ -60,6 +62,7 @@ namespace TowerDefenseOOP
             mouseTexture = content.Load<Texture2D>("hover");        //Load mouseTexture
             mouseManager = new MouseManager(map, Level);
             mouseManager.LoadContent(content);
+            explosionTexture = content.Load<Texture2D>("animation");
             for (int i = 0; i < Container.numberOfTowers;i++ )
             {
                 if (i < 5 &&i!=3)      //Chỉ có 4  tower có đạn
@@ -87,7 +90,7 @@ namespace TowerDefenseOOP
             {
                 case 0:
                 {
-                    ackackTower ackTower = new ackackTower(towerTextureList[0], 0, MouseManager.position, baseTexture, bulletTextureList[0]);
+                    ackackTower ackTower = new ackackTower(towerTextureList[0], 0, MouseManager.position, baseTexture, bulletTextureList[0],explosionTexture);
                     ackackTowerList.Add(ackTower);
                     break;
                 }
@@ -95,31 +98,35 @@ namespace TowerDefenseOOP
                 case 1:
                 {
                     //Trường hợp súng máy hai nòng
-                    DualMachineGunTower dmgt = new DualMachineGunTower(towerTextureList[1], 1, MouseManager.position, baseTexture, bulletTextureList[0]);
+                    DualMachineGunTower dmgt = new DualMachineGunTower(towerTextureList[1], 1, MouseManager.position, baseTexture, bulletTextureList[1], explosionTexture);
                     dualMachineTowerList.Add(dmgt);
                     break;
                 }
-                    break;
                 case 2:
+                {
+                    //Trường hợp súng máy hai nòng
+                    MachineGunTower mGT = new MachineGunTower(towerTextureList[2], 2, MouseManager.position, baseTexture, bulletTextureList[2], explosionTexture);
+                    machineGunTowerList.Add(mGT);
                     break;
+                }
                 case 3:
                 {
                     //Trường hợp súng laze
-                    LazerTower lt = new LazerTower(towerTextureList[3], 3, MouseManager.position, baseTexture, bulletTextureList[0]);
+                    LazerTower lt = new LazerTower(towerTextureList[3], 3, MouseManager.position, baseTexture, bulletTextureList[3], explosionTexture);
                     lazeTowerList.Add(lt);
                     break;
                 }
                 case 4:
                 {
                     //Trường hợp bệ phóng tên lửa
-                    RocketTower rT = new RocketTower(towerTextureList[4], 4, MouseManager.position, baseTexture, bulletTextureList[3]);
+                    RocketTower rT = new RocketTower(towerTextureList[4], 4, MouseManager.position, baseTexture, bulletTextureList[4], explosionTexture);
                     rocketTowerList.Add(rT);
                     break;
                 }
                 case 5:
                 {
                     //Trường hợp Tháp tăng cường năng lượng
-                    EnhancingTower eT = new EnhancingTower(towerTextureList[5], 5, MouseManager.position, baseTexture, null);
+                    EnhancingTower eT = new EnhancingTower(towerTextureList[5], 5, MouseManager.position, baseTexture, null, null);
                     enhancingTowerList.Add(eT);
                     break;
                 }

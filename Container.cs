@@ -9,7 +9,6 @@ namespace TowerDefenseOOP
 {
     class Container
     {
-       
         public static int tileSize = 60;
         public static int roadSize = 60;
         public static int scrWidth = 1200;
@@ -18,8 +17,6 @@ namespace TowerDefenseOOP
 
         public static int animationWidth = 50;
         public static int animationHeight = 50;
-        public static int animationFrameXMax = 8;
-        public static int animationFrameYMax = 8;
 
         public static int enemyTextureSize = 50;
         public static int healthBarHeight = 3;

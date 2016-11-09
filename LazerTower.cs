@@ -12,8 +12,8 @@ namespace TowerDefenseOOP
 {
     class LazerTower:Tower
     {
-        public LazerTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
-            base(level,position,baseTexture,texture,bulletTexture)
+        public LazerTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
+            base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
             radius = 5*Container.radiusMax /10;
             attack = 7 * Container.attackMax / 10 ;
@@ -35,16 +35,13 @@ namespace TowerDefenseOOP
             {
                 if (target != null)
                 {
+                    isTargetAttacked = true;
                     target.CurrentHP -= attack;
                     timer = 0;
                 }
             }
             FaceTarget();           //Quay tower về phía target
-            if (target != null)
-            {
-                if (!IsInRange(target) || target.IsAlive == false)
-                    target = null;
-            }
+            base.Update(gameTime);
         }
 
         //Draw

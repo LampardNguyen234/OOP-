@@ -13,8 +13,8 @@ namespace TowerDefenseOOP
     {
 
         List<Enemy> oldTargetList = new List<Enemy>();  //Danh sách chưa các target ra khỏi bán kính nhưng chưa chết
-        public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture):
-            base(level,position,baseTexture,texture,bulletTexture)
+        public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
+            base(level,position,baseTexture,texture,bulletTexture, explosionTexture)
         {
             radius = Container.radiusMax/2;
             attack = Container.attackMax;
@@ -41,6 +41,7 @@ namespace TowerDefenseOOP
                     if (target != null)
                     {
                         //Tạo bullet
+                        isTargetAttacked = true;
                         Bullet bullet = new Bullet(position, level, bulletTexture, target);
                         bulletList.Add(bullet);
                         //Thay đổi khung hình
@@ -85,8 +86,6 @@ namespace TowerDefenseOOP
             {
                 if (!IsInRange(target) && target.IsAlive)
                     oldTargetList.Add(target);
-                if (target.IsAlive == false || !IsInRange(target))
-                    target = null;
             }
             for (int i = 0; i < oldTargetList.Count;i++)        //Cập nhật hoặc xóa oldTarget
             {
@@ -96,7 +95,8 @@ namespace TowerDefenseOOP
                     i--;
                 }
             }
-                BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
+           BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
+           base.Update(gameTime);
         }
 
     }

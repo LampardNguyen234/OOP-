@@ -15,8 +15,8 @@ namespace TowerDefenseOOP
         Vector2 changeT;
         Texture2D animation;
         //Constructor
-        public DualMachineGunTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture) :
-            base(level,position,baseTexture,texture,bulletTexture)
+        public DualMachineGunTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
+            base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
             radius = 100f;
             attack = 10;
@@ -49,6 +49,7 @@ namespace TowerDefenseOOP
                     bulletList.Add(bullet1);
                     Bullet bullet2 = new Bullet(position-changeT, level, bulletTexture, target);
                     bulletList.Add(bullet2);
+                    isTargetAttacked = true;
                 }
 
                 timer = 0;
@@ -75,8 +76,7 @@ namespace TowerDefenseOOP
             }
 
             FaceTarget();//Quay tower hướng về target
-            if (!IsInRange(target) || target.IsAlive == false)
-                target = null;
+            base.Update(gameTime);
         }
     }
 }

@@ -234,7 +234,7 @@ namespace TowerDefenseOOP
                     roadTextureList.Add(road);
                 
             }
-            //background = Content.Load<Texture2D>("background");
+            background = Content.Load<Texture2D>("map1");
                 
         }
 
@@ -370,6 +370,7 @@ namespace TowerDefenseOOP
                     
                 }
             }
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
         }
     }
 }

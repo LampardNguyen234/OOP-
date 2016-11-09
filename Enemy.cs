@@ -95,7 +95,7 @@ namespace TowerDefenseOOP
             healthPercent = (float)currentHP / (float)startingHP;
             healthBarRect = new Rectangle(((int)center.X + Container.healthBarWidth/2), (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
-            isWayPointsSet = false;       
+            isWayPointsSet = false;
         }
 
 
@@ -325,10 +325,10 @@ namespace TowerDefenseOOP
         //Hàm Draw
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(isAlive)
+            if (isAlive)
             {
                 //Vẽ enemy
-                spriteBatch.Draw(texture, center, boundingBox, Color.White, rotation, origin,scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, center, boundingBox, Color.White, rotation, origin, scale, SpriteEffects.None, 0f);
                 //Vẽ thanh máu
                 spriteBatch.Draw(healthBarTexture, healthBarRect, Color.Violet);
             }

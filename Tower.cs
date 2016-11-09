@@ -19,9 +19,9 @@ namespace TowerDefenseOOP
         }
         protected   Vector2 origin, origin1;
         protected Vector2 center;
-        protected Texture2D towerTexture, baseTexture, bulletTexture;
+        protected Texture2D towerTexture, baseTexture, bulletTexture, animationTexture;
         protected bool isAlive;
-
+        Animation explosion;
         public  bool IsAlive
         {
             get { return isAlive; }
@@ -30,6 +30,7 @@ namespace TowerDefenseOOP
         protected float rotation;
         protected float radius;
         protected float smallestRange;
+        protected bool isTargetAttacked;
 
         protected List<Bullet> bulletList = new List<Bullet>();
 
@@ -77,8 +78,9 @@ namespace TowerDefenseOOP
         #endregion
 
         //Constructor
-        public Tower(int level, Vector2 position, Texture2D baseTexture, Texture2D towerTexture, Texture2D bulletTexture)
+        public Tower(int level, Vector2 position, Texture2D baseTexture, Texture2D towerTexture, Texture2D bulletTexture, Texture2D animationTexture)
         {
+            this.animationTexture = animationTexture;
             this.bulletTexture = bulletTexture;
             this.baseTexture = baseTexture;
             this.towerTexture = towerTexture;
@@ -95,6 +97,9 @@ namespace TowerDefenseOOP
             BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);
             isUpgradedByPlayer = false;
             isUpgradedByTower = false;
+            isTargetAttacked = false;
+            explosion = new Animation(position, animationTexture);
+            explosion.IsVisible = false;
         }
 
         //Kiểm tra xem enemy có nằm trong bán kính không
@@ -133,6 +138,27 @@ namespace TowerDefenseOOP
             rotation = (float)Math.Atan2(direction.Y, direction.X);
         }
 
+        //Hàm Update
+        public void Update(GameTime gameTime)
+        {
+            if (target != null)
+            {
+                if (target.CurrentHP <= 0)
+                {
+                    explosion = new Animation(target.Center, animationTexture);
+                    explosion.IsVisible = true;
+                    target = null;
+                }
+            }
+            if(target!=null)
+            {
+                if (target.IsAlive == false || !IsInRange(target))
+                    target = null;
+            }
+            explosion.Update(gameTime);
+            
+        }
+
         //Draw
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -145,6 +171,8 @@ namespace TowerDefenseOOP
                 spriteBatch.Draw(baseTexture, position, null, Color.White, 0f, origin1, 0.7f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, 1.0f, SpriteEffects.None, 0f);
             }
+            if (explosion.IsVisible)
+                explosion.Draw(spriteBatch);
         }
 
         //Kiểm tra đạn đã bay ra khỏi tower chưa

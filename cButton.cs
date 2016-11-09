@@ -17,7 +17,7 @@ namespace TowerDefenseOOP
 
         Color colour = new Color(255, 255, 255, 255);
         public Vector2 size;
-        public cButton(Texture2D newTexture, GraphicsDevice graphics,Vector2 tempSize)
+        public cButton(Texture2D newTexture, GraphicsDevice graphics, Vector2 tempSize)
         {
             texture = newTexture;
             //scrW = 900 scrH 600
@@ -35,14 +35,9 @@ namespace TowerDefenseOOP
                 if (colour.A == 255) down = false;
                 if (colour.A == 0) down = true;
                 if (down) colour.A += 3; else colour.A -= 3;
-<<<<<<< HEAD
                 if (mouse.LeftButton == ButtonState.Pressed) 
                     isClicked = true;
 
-=======
-                if (mouse.LeftButton == ButtonState.Pressed) isClicked = true;
-            
->>>>>>> origin/master
             }
             else if (colour.A < 255)
             {

@@ -13,8 +13,8 @@ namespace TowerDefenseOOP
     {
 
         //Constructor
-        public MachineGunTower(Texture2D texture, int level, Vector2 postition, Texture2D baseTexture, Texture2D bulletTexture) :
-            base(level,postition,baseTexture,texture,bulletTexture)
+        public MachineGunTower(Texture2D texture, int level, Vector2 postition, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
+            base(level,postition,baseTexture,texture,bulletTexture,explosionTexture)
         {
             radius = 100f;
             attack = 5;
@@ -38,7 +38,7 @@ namespace TowerDefenseOOP
                 if (target != null)
                 {
                     //Tạo bullet
-                    Bullet bullet = new Bullet(position, level, bulletTexture, target.Center);
+                    Bullet bullet = new Bullet(position, level, bulletTexture, target);
                     bulletList.Add(bullet);
                 }
 
@@ -66,8 +66,7 @@ namespace TowerDefenseOOP
             }
 
             FaceTarget();//Quay tower hướng về target
-            if (!IsInRange(target) || target.IsAlive == false)
-                target = null;
+            base.Update(gameTime);
         }
     }
 }
