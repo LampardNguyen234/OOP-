@@ -27,49 +27,37 @@ namespace TowerDefenseOOP
         Level level;
         float timer;
         int enemyPerWave;
-
-        int goldHave = 0;
         // Tu update 10:17 31/10 Button
         //<Start>
         // Tien dang co!!!!!!!!!! Update se chuyen thanh bien luu gia tri tien.
-
+        int goldHave = 0;
         // Phan button 
+        enum GameState
+        {
+            MainMenu = 0,
+            Intro,
+            Playing,
+            Tacgia
 
-        Container.GameState CurrentState = Container.GameState.MainMenu;
+        }
+        GameState CurrentState = GameState.MainMenu;
         //button o menu game
-        
-        MouseState mouse;
 
-        cButton playButton;
-        cButton introButton;
-        cButton creditButton;
-        cButton backButton;
-        towerButton tower1Button;
-        towerButton tower2Button;
-        towerButton tower3Button;
-        towerButton tower4Button;
-        towerButton tower5Button;
-        towerButton tower6Button;
+        cButton btnPlay;
+        cButton btnHuongDan;
+        cButton btnTacGia;
+        cButton btnBack;
 
-        Texture2D mainMenuTexture;
-        Texture2D huongDanTexture;
-        Texture2D tacGiaTexture;
-        Texture2D playMenuTexture;
-        Texture2D pauseStateTexture;
+        // button trong game
 
-        cButton pauseButton;
-        cButton resumeButton;
-        cButton offMusicButton;
-        cButton onMusicButton;
+        towerButton btnTower1;
+        towerButton btnTower2;
+        towerButton btnTower3;
+        towerButton btnTower4;
+        towerButton btnTower5;
+        towerButton btnTower6;
+        //<end>
 
-        towerButton specialSkill1Button;
-        towerButton specialSkill2Button;
-        towerButton specialSkill3Button;
-
-        
-        
-       // end
-        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -77,7 +65,6 @@ namespace TowerDefenseOOP
             graphics.PreferredBackBufferHeight = Container.scrHeight;
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
-           // ButtonManager = new buttonManager(graphics);
 
         }
 
@@ -101,280 +88,201 @@ namespace TowerDefenseOOP
             player = new Player(map, maplevel);
             player.LoadContent(Content);
             healthbar = Content.Load<Texture2D>("healthbar");
-
-            for (int i = 0; i < Container.numberOfEnemies; i++)
+            for (int i = 0; i < Container.numberOfEnemies;i++ )
             {
                 Texture2D enemy = Content.Load<Texture2D>("enemy_0" + i.ToString("d2"));
                 enemyTextureList.Add(enemy);
             }
             timer = 0;
             enemyPerWave = Container.enemyPerWave;
-           // ButtonManager.LoadContent(Content);
-            //<End>
-
-            //Button
+            
             //Tu update Button
             //<Start>
             // Load button
+            btnPlay = new cButton(Content.Load<Texture2D>("buttonPlay"), graphics.GraphicsDevice, Container.btnMenuGameSize);
+            btnPlay.SetPosition(Container.btnPlayPosition);
 
-            playButton = new cButton(Content.Load<Texture2D>("buttonPlay"), graphics.GraphicsDevice, Container.btnMenuGameSize);
-            playButton.SetPosition(Container.btnPlayPosition);
+            btnHuongDan = new cButton(Content.Load<Texture2D>("buttonHD"), graphics.GraphicsDevice, Container.btnMenuGameSize);
+            btnHuongDan.SetPosition(Container.btnIntroPosition);
 
-            introButton = new cButton(Content.Load<Texture2D>("buttonHD"), graphics.GraphicsDevice, Container.btnMenuGameSize);
-            introButton.SetPosition(Container.btnIntroPosition);
+            btnTacGia = new cButton(Content.Load<Texture2D>("buttonTG"), graphics.GraphicsDevice, Container.btnMenuGameSize);
+            btnTacGia.SetPosition(Container.btnTacGiaPosition);
 
-            creditButton = new cButton(Content.Load<Texture2D>("buttonTG"), graphics.GraphicsDevice, Container.btnMenuGameSize);
-            creditButton.SetPosition(Container.btnTacGiaPosition);
+            btnBack = new cButton(Content.Load<Texture2D>("buttonBack"), graphics.GraphicsDevice, Container.btnBackSize);
+            btnBack.SetPosition(Container.btnBackPosition);
 
-            backButton = new cButton(Content.Load<Texture2D>("buttonBack"), graphics.GraphicsDevice, Container.btnBackSize);
-            backButton.SetPosition(Container.btnBackPosition);
+            btnTower1 = new towerButton(Content.Load<Texture2D>("tower__000"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower1.SetPosition(Container.btnTower1Position);
+            btnTower1.setPrice(Container.tower1Price);
+            btnTower2 = new towerButton(Content.Load<Texture2D>("tower2"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower2.SetPosition(Container.btnTower2Position);
 
-            tower1Button = new towerButton(Content.Load<Texture2D>("tower__000"),Content.Load<Texture2D>("tower1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower1Button.SetPosition(Container.btnTower1Position);
-            tower1Button.setPrice(Container.tower1Price);
+            btnTower3 = new towerButton(Content.Load<Texture2D>("tower3"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower3.SetPosition(Container.btnTower3Position);
 
-            tower2Button = new towerButton(Content.Load<Texture2D>("tower2"), Content.Load<Texture2D>("tower2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower2Button.SetPosition(Container.btnTower2Position);
-            tower2Button.setPrice(Container.tower2Price);
+            btnTower4 = new towerButton(Content.Load<Texture2D>("tower4"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower4.SetPosition(Container.btnTower4Position);
 
-            tower3Button = new towerButton(Content.Load<Texture2D>("tower3"), Content.Load<Texture2D>("tower3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower3Button.SetPosition(Container.btnTower3Position);
-            tower3Button.setPrice(Container.tower3Price);
+            btnTower5 = new towerButton(Content.Load<Texture2D>("tower5"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower5.SetPosition(Container.btnTower5Position);
 
-            tower4Button = new towerButton(Content.Load<Texture2D>("tower4"), Content.Load<Texture2D>("tower4detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower4Button.SetPosition(Container.btnTower4Position);
-            tower4Button.setPrice(Container.tower4Price);
-
-            tower5Button = new towerButton(Content.Load<Texture2D>("tower5"), Content.Load<Texture2D>("tower5detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower5Button.SetPosition(Container.btnTower5Position);
-            tower5Button.setPrice(Container.tower5Price);
-
-            tower6Button = new towerButton(Content.Load<Texture2D>("tower6"), Content.Load<Texture2D>("tower6detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower6Button.SetPosition(Container.btnTower6Position);
-            tower6Button.setPrice(Container.tower6Price);
-
-            pauseButton = new cButton(Content.Load<Texture2D>("pause"), graphics.GraphicsDevice, Container.btnPauseSize);
-            pauseButton.SetPosition(Container.btnPausePosition);
-
-            resumeButton = new cButton(Content.Load<Texture2D>("resume"), graphics.GraphicsDevice, Container.btnPauseSize);
-            resumeButton.SetPosition(Container.btnResumePosition);
-
-            offMusicButton = new cButton(Content.Load<Texture2D>("turnOffMusic"), graphics.GraphicsDevice, Container.btnPauseSize);
-            offMusicButton.SetPosition(Container.btnOffMusicPosition);
-
-            onMusicButton = new cButton(Content.Load<Texture2D>("turnOnMusic"), graphics.GraphicsDevice, Container.btnPauseSize);
-            onMusicButton.SetPosition(Container.btnOnMusicPosition);
-
-            specialSkill1Button = new towerButton(Content.Load<Texture2D>("specialSkill1"), Content.Load<Texture2D>("special1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            specialSkill1Button.SetPosition(Container.btnSpecialSkill1Button);
-
-            specialSkill2Button = new towerButton(Content.Load<Texture2D>("specialSkill2"), Content.Load<Texture2D>("special2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            specialSkill2Button.SetPosition(Container.btnSpecialSkill2Button);
-
-            specialSkill3Button = new towerButton(Content.Load<Texture2D>("specialSkill3"), Content.Load<Texture2D>("special3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            specialSkill3Button.SetPosition(Container.btnSpecialSkill3Button);
-
-            mainMenuTexture = Content.Load<Texture2D>("MainMenu");
-
-            huongDanTexture = Content.Load<Texture2D>("HuongDan");
-
-            tacGiaTexture = Content.Load<Texture2D>("TacGia");
-
-            pauseStateTexture = Content.Load<Texture2D>("pauseState");
-
-            playMenuTexture = Content.Load<Texture2D>("PlayMenu");
+            btnTower6 = new towerButton(Content.Load<Texture2D>("tower6"), graphics.GraphicsDevice, Container.btnTowerSize);
+            btnTower6.SetPosition(Container.btnTower6Position);
+            //<End>
         }
 
         protected override void UnloadContent()
         {
-
+            
         }
 
         protected override void Update(GameTime gameTime)
         {
-
-           
+            MouseState mouse = Mouse.GetState();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
             //Tu update MainMenu
             //<Start>
-            mouse = Mouse.GetState();
-            //ButtonManager.Update(CurrentState,mouse, goldHave,gameTime);
             switch (CurrentState)
             {
-                case Container.GameState.MainMenu:
-                    if (playButton.isClicked == true)
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true)
                     {
-                        CurrentState = Container.GameState.Playing;
+                        CurrentState = GameState.Playing;
 
                     }
-                    else if (creditButton.isClicked == true)
+                    else if (btnTacGia.isClicked == true)
                     {
-                        CurrentState = Container.GameState.Tacgia;
+                        CurrentState = GameState.Tacgia;
 
                     }
-                    else if (introButton.isClicked == true)
+                    else if (btnHuongDan.isClicked == true)
                     {
-                        CurrentState = Container.GameState.Intro;
+                        CurrentState = GameState.Intro;
 
                     }
-                    playButton.Update(mouse);
-                    creditButton.Update(mouse);
-                    introButton.Update(mouse);
-                    backButton.Update(mouse);
+                    btnPlay.Update(mouse);
+                    btnTacGia.Update(mouse);
+                    btnHuongDan.Update(mouse);
+                    //btnBack.Update(mouse);
                     break;
-                case Container.GameState.Intro:
-                    if (backButton.isClicked == true)
-                        CurrentState = Container.GameState.MainMenu;
-                    backButton.Update(mouse);
+                case GameState.Intro:
+                    if (btnBack.isClicked == true)
+                        CurrentState = GameState.MainMenu;
+                    btnBack.Update(mouse);
                     break;
-                case Container.GameState.Tacgia:
-                    if (backButton.isClicked == true)
-                        CurrentState = Container.GameState.MainMenu;
-                    backButton.Update(mouse);
+                case GameState.Tacgia:
+                    if (btnBack.isClicked == true)
+                        CurrentState = GameState.MainMenu;
+                    btnBack.Update(mouse);
                     break;
-                case Container.GameState.Playing:
-                    if (pauseButton.isClicked == true)
-                        CurrentState = Container.GameState.Pausing;
-                    pauseButton.Update(mouse);
-                    if (resumeButton.isClicked == true)
-                        CurrentState = Container.GameState.Playing;
-                    resumeButton.Update(mouse);
-                    tower1Button.Update(mouse, goldHave);
-                    tower2Button.Update(mouse, goldHave);
-                    tower3Button.Update(mouse, goldHave);
-                    tower4Button.Update(mouse, goldHave);
-                    tower5Button.Update(mouse, goldHave);
-                    tower6Button.Update(mouse, goldHave);
-                    specialSkill1Button.Update(mouse, goldHave);
-                    specialSkill2Button.Update(mouse, goldHave);
-                    specialSkill3Button.Update(mouse, goldHave);
-                    break;
+                case GameState.Playing:
+                    // Update trong Playing them o day
+                    //<Start>
+                        timer += 2;
+                        if (timer > Container.timeBetweenEnemy)
+                        {
+                            if (enemyPerWave > 0)
+                            {
+                                timer = 0f;
+                                enemyList.Add(new Enemy(enemyTextureList[3],healthbar,4));
+                                enemyPerWave--;
+                            }
+                        }
+                        foreach (Enemy enemy in enemyList)
+                        {
+                            if (enemy.isWayPointsSet == false)
+                            {
+                                Random rand = new Random();
+                                int k = rand.Next(0, 20);
+                                level.LoadWayPoint(k);
+                                enemy.SetWaypoints(level.WayPoints);
+                                enemy.isWayPointsSet = true;
+                            }
+                        }
+        
+                        player.Update(gameTime,enemyList);
+                        for (int i = 0; i < enemyList.Count; i++)
+                        {
+                            if (enemyList[i].IsAlive)
+                                enemyList[i].Update(gameTime);
+                            else
+                            {
+                                enemyList.RemoveAt(i);
+                                i--;
+                            }
+                        }
 
-            }
-            if (CurrentState == Container.GameState.Playing)
-            {
-                timer += 2;
-                if (timer > Container.timeBetweenEnemy)
-                {
-                    if (enemyPerWave > 0)
-                    {
-                        timer = 0f;
-                        enemyList.Add(new Enemy(enemyTextureList[3], healthbar, 4));
-                        enemyPerWave--;
-                    }
-                }
-                foreach (Enemy enemy in enemyList)
-                {
-                    if (enemy.isWayPointsSet == false)
-                    {
-                        Random rand = new Random();
-                        int k = rand.Next(0, 20);
-                        level.LoadWayPoint(k);
-                        enemy.SetWaypoints(level.WayPoints);
-                        enemy.isWayPointsSet = true;
-                    }
-                }
-
-                player.Update(gameTime, enemyList);
-                for (int i = 0; i < enemyList.Count; i++)
-                {
-                    if (enemyList[i].IsAlive)
-                        enemyList[i].Update(gameTime);
-                    else
-                    {
-                        enemyList.RemoveAt(i);
-                        i--;
-                    }
-                }
-
-                //animation.Update(gameTime);
-                base.Update(gameTime);
-                player.Update(gameTime, enemyList);
-            }
-
+            //animation.Update(gameTime);
             base.Update(gameTime);
+                    player.Update(gameTime,enemyList);
+                    
 
+                    
+
+                    //<End>
+                    btnTower1.Update(mouse, goldHave);
+                    btnTower2.Update(mouse, goldHave);
+                    btnTower3.Update(mouse, goldHave);
+                    btnTower4.Update(mouse, goldHave);
+                    btnTower5.Update(mouse, goldHave);
+                    btnTower6.Update(mouse, goldHave);
+                   
+               
+                    break;
+             }
+             base.Update(gameTime);
+           
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             //Tu update MainMenu
-
             spriteBatch.Begin();
-            //ButtonManager.Draw(spriteBatch, CurrentState);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
             switch (CurrentState)
             {
-                case Container.GameState.MainMenu:
-                    spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
-                    playButton.Draw(spriteBatch);
-                    introButton.Draw(spriteBatch);
-                    creditButton.Draw(spriteBatch);
+                case GameState.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("MainMenu"), new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
+
+                    btnPlay.Draw(spriteBatch);
+                    btnHuongDan.Draw(spriteBatch);
+                    btnTacGia.Draw(spriteBatch);
                     break;
-                case Container.GameState.Intro:
-                    spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
-                    spriteBatch.Draw(huongDanTexture, new Rectangle(200, 50, 800, 600), Color.White);
-                    backButton.Draw(spriteBatch);
+                case GameState.Intro:
+                    spriteBatch.Draw(Content.Load<Texture2D>("MainMenu"), new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
+                    spriteBatch.Draw(Content.Load<Texture2D>("HuongDan"), new Rectangle(200, 50, 800, 600), Color.White);
+                    btnBack.Draw(spriteBatch);
                     break;
-                case Container.GameState.Tacgia:
-                    spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
-                    spriteBatch.Draw(tacGiaTexture, new Rectangle(200, 50, 800, 600), Color.White);
-                    backButton.Draw(spriteBatch);
+                case GameState.Tacgia:
+                    spriteBatch.Draw(Content.Load<Texture2D>("MainMenu"), new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
+                    spriteBatch.Draw(Content.Load<Texture2D>("TacGia"), new Rectangle(200, 50, 800, 600), Color.White);
+                    btnBack.Draw(spriteBatch);
 
                     break;
-                case Container.GameState.Pausing:
-                    spriteBatch.Draw(playMenuTexture, Container.playMenuPosition, Color.White);
-                    spriteBatch.Draw(pauseStateTexture, new Rectangle(100, 50, 800, 600), Color.White);
-                    tower1Button.Draw(spriteBatch);
-                    tower2Button.Draw(spriteBatch);
-                    tower3Button.Draw(spriteBatch);
-                    tower4Button.Draw(spriteBatch);
-                    tower5Button.Draw(spriteBatch);
-                    tower6Button.Draw(spriteBatch);
+                case GameState.Playing:
 
-                    onMusicButton.Draw(spriteBatch);
-                    resumeButton.Draw(spriteBatch);
-                    specialSkill1Button.Draw(spriteBatch);
-                    specialSkill2Button.Draw(spriteBatch);
-                    specialSkill3Button.Draw(spriteBatch);
-                    break;
-                case Container.GameState.Playing:
-
-                    spriteBatch.Draw(playMenuTexture, Container.playMenuPosition, Color.White);
-
+                    spriteBatch.Draw(Content.Load<Texture2D>("PlayMenu"), Container.playMenuPosition, Color.White);
+                   
                     //animation.Draw(spriteBatch);
                     // Cac ban ve trong playing thi Update o day
                     //<Start>
-
-                    tower1Button.Draw(spriteBatch);
-                    tower2Button.Draw(spriteBatch);
-                    tower3Button.Draw(spriteBatch);
-                    tower4Button.Draw(spriteBatch);
-                    tower5Button.Draw(spriteBatch);
-                    tower6Button.Draw(spriteBatch);
-                    onMusicButton.Draw(spriteBatch);
-                    pauseButton.Draw(spriteBatch);
-                    specialSkill1Button.Draw(spriteBatch);
-                    specialSkill2Button.Draw(spriteBatch);
-                    specialSkill3Button.Draw(spriteBatch);
-
+                    level.Draw(spriteBatch);
+                    player.Draw(spriteBatch);
+                    foreach (Enemy e in enemyList)
+                        e.Draw(spriteBatch);
+                   
+                    btnTower1.Draw(spriteBatch);
+                    btnTower2.Draw(spriteBatch);
+                    btnTower3.Draw(spriteBatch);
+                    btnTower4.Draw(spriteBatch);
+                    btnTower5.Draw(spriteBatch);
+                    btnTower6.Draw(spriteBatch);
                     //<End>
                     break;
             }
-            
-            
-            if (CurrentState == Container.GameState.Playing)
-            {
-                //animation.Draw(spriteBatch);
-                // Cac ban ve trong playing thi Update o day
-                //<Start>
-                level.Draw(spriteBatch);
-                player.Draw(spriteBatch);
-                foreach (Enemy e in enemyList)
-                    e.Draw(spriteBatch);
-            }
-
             spriteBatch.End();
 
-
+            
             base.Draw(gameTime);
         }
     }
