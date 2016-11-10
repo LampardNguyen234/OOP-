@@ -56,7 +56,7 @@ namespace TowerDefenseOOP
         {
             spriteBatch.Draw(texture, rectangle, colour);
             if (hover)
-                spriteBatch.Draw(buttondetail,new Rectangle((int)position.X-30,(int)position.Y-30,100,150), new Rectangle(0, 0, 130, 170), Color.White);
+                spriteBatch.Draw(buttondetail,new Rectangle((int)position.X+30,(int)position.Y+30,130,170), new Rectangle(0, 0, 130, 170), Color.White);
         }
         public void setPrice(int price)
         {

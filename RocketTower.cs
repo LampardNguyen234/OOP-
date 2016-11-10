@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace TowerDefenseOOP
 {
@@ -45,7 +44,6 @@ namespace TowerDefenseOOP
                         isTargetAttacked = true;
                         Bullet bullet = new Bullet(position, level, bulletTexture, target);
                         bulletList.Add(bullet);
-                        Game1.sm.towerShoot[4].Play();
                         //Thay đổi khung hình
                         frame++;
 

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace TowerDefenseOOP
 {
@@ -46,10 +45,8 @@ namespace TowerDefenseOOP
                     changeT = Vector2.Transform(new Vector2(0, change)
                 , Matrix.CreateRotationZ(rotation+0.5f));
                     //Tạo bullet
-                    Game1.sm.towerShoot[1].Play();
                     Bullet bullet1 = new Bullet(position+changeT, level, bulletTexture, target);
                     bulletList.Add(bullet1);
-                    Game1.sm.towerShoot[1].Play();
                     Bullet bullet2 = new Bullet(position-changeT, level, bulletTexture, target);
                     bulletList.Add(bullet2);
                     isTargetAttacked = true;

@@ -31,13 +31,15 @@ namespace TowerDefenseOOP
 
         public static int towerSize = 50;
 
+        public static int enemyPerWave = 50;
+
         public static int bulletSize = 8;
 
-        public static float basicEnemySpeed = 3;
+        public static int basicEnemySpeed = 1;
 
         public static int numberOfTowers = 6;
 
-        public static int numberOfEnemies = 7;
+        public static int numberOfEnemies = 4;
 
         // Tu update 10:17 31/10 // Button size
         //button
@@ -54,16 +56,16 @@ namespace TowerDefenseOOP
         }
 
         
-        public static Vector2 btnMenuGameSize = new Vector2(200, 50);
+        public static Vector2 btnMenuGameSize = new Vector2(300, 80);
         public static Vector2 btnTowerSize = new Vector2(50, 50);
         public static Vector2 btnBackSize = new Vector2(80, 80);
         public static Vector2 btnPauseSize = new Vector2(50, 50);
 
-        public static Vector2 btnPlayPosition = new Vector2(400, 300);
+        public static Vector2 btnPlayPosition = new Vector2(500, 300);
 
-        public static Vector2 btnIntroPosition = new Vector2(400, 200);
+        public static Vector2 btnIntroPosition = new Vector2(500, 200);
 
-        public static Vector2 btnTacGiaPosition = new Vector2(400, 400);
+        public static Vector2 btnTacGiaPosition = new Vector2(500, 400);
 
         public static Vector2 btnBackPosition = new Vector2(750, 150);
 
@@ -105,16 +107,7 @@ namespace TowerDefenseOOP
         public static int tower4Price = 50;
         public static int tower5Price = 50;
         public static int tower6Price = 50;
-
+        
         //<End>
-
-
-        #region Input
-        public static int startingScore;
-        public static int enemyPerWave;
-        public static float timeBetweenWave;
-        public static int waveQuantity;
-        public static List<int[]> enemyEachWave = new List<int[]>();
-        #endregion
     }
 }
