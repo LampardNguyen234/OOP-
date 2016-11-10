@@ -75,27 +75,27 @@ namespace TowerDefenseOOP
 
             tower1Button = new towerButton(Content.Load<Texture2D>("tower_000_build"), Content.Load<Texture2D>("tower1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower1Button.SetPosition(Container.btnTower1Position);
-            tower1Button.setPrice(Container.tower1Price);
+            tower1Button.setPrice(Container.Tower0Price);
 
             tower2Button = new towerButton(Content.Load<Texture2D>("tower_001_build"), Content.Load<Texture2D>("tower2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower2Button.SetPosition(Container.btnTower2Position);
-            tower2Button.setPrice(Container.tower2Price);
+            tower2Button.setPrice(Container.Tower1Price);
 
             tower3Button = new towerButton(Content.Load<Texture2D>("tower_002_build"), Content.Load<Texture2D>("tower3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower3Button.SetPosition(Container.btnTower3Position);
-            tower3Button.setPrice(Container.tower3Price);
+            tower3Button.setPrice(Container.Tower2Price);
 
             tower4Button = new towerButton(Content.Load<Texture2D>("tower_003_build"), Content.Load<Texture2D>("tower4detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower4Button.SetPosition(Container.btnTower4Position);
-            tower4Button.setPrice(Container.tower4Price);
+            tower4Button.setPrice(Container.Tower3Price);
 
             tower5Button = new towerButton(Content.Load<Texture2D>("tower_004_build"), Content.Load<Texture2D>("tower5detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower5Button.SetPosition(Container.btnTower5Position);
-            tower5Button.setPrice(Container.tower5Price);
+            tower5Button.setPrice(Container.Tower4Price);
 
             tower6Button = new towerButton(Content.Load<Texture2D>("tower_005_build"), Content.Load<Texture2D>("tower6detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower6Button.SetPosition(Container.btnTower6Position);
-            tower6Button.setPrice(Container.tower6Price);
+            tower6Button.setPrice(Container.Tower5Price);
 
             pauseButton = new cButton(Content.Load<Texture2D>("pause"), graphics.GraphicsDevice, Container.btnPauseSize);
             pauseButton.SetPosition(Container.btnPausePosition);

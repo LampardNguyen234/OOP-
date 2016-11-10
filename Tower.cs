@@ -44,7 +44,9 @@ namespace TowerDefenseOOP
         protected int price;
         protected int level;
         protected int frame;   //Thay đổi hình ảnh của Tower
-        protected int frameMaxX;      //Số frame theo chiều rộng (Width)
+        protected int frameMax;      //Số frame theo chiều rộng (Width)
+        protected int frameY;   //Thay đổi hình ảnh của Tower
+        protected int frameMaxY;      //Số frame theo chiều rộng (Width)
         public Vector2 Center
         {
             get { return this.center; }
@@ -93,7 +95,9 @@ namespace TowerDefenseOOP
             smallestRange = radius = 0;
             this.level = level;
             frame = 0;
-            frameMaxX = towerTexture.Width / Container.towerSize;
+            frameMax = towerTexture.Width / Container.towerSize;
+            frameY = 0;
+            frameMaxY = towerTexture.Height / Container.towerSize;
             BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);
             isUpgradedByPlayer = false;
             isUpgradedByTower = false;
@@ -211,9 +215,9 @@ namespace TowerDefenseOOP
         //Hàm nâng cấp Tower
         public void Upgrade()
         {
-            radius += Container.radiusMax / 10;
-            attack += Container.attackMax / 10;
-            interval -= Container.intervalmax / 5;
+            radius += radius * 20 / 100 ;
+            attack += attack * 10 / 100 ;
+            interval = interval * 85 / 100 ;
             price += price % 10 / 100;
             IsUpgradedByPlayer = true;
         }

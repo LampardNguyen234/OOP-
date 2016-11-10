@@ -14,28 +14,20 @@ namespace TowerDefenseOOP
         public static int scrWidth = 1200;
         public static int scrHeight = 600;
         public static float PI= 3.14159265358979f;
-
         public static int animationWidth = 50;
         public static int animationHeight = 50;
-
         public static int enemyTextureSize = 50;
         public static int healthBarHeight = 3;
         public static int healthBarWidth = 20;
-        public static int enemyStartingHP = 100;
         public static float enemyTextureScale = 0.8f;
-
         public static int MapWidth = 15;
         public static int MapHeight = 10;
 
-        public static float timeBetweenEnemy = 100f;
+        public static float timeBetweenEnemy = 200f;
 
         public static int towerSize = 50;
 
         public static int bulletSize = 8;
-
-        public static float basicEnemySpeed = 3;
-
-        public static int numberOfTowers = 6;
 
         public static int numberOfEnemies = 7;
 
@@ -50,7 +42,6 @@ namespace TowerDefenseOOP
             Playing,
             Tacgia,
             Pausing
-
         }
 
         
@@ -88,33 +79,42 @@ namespace TowerDefenseOOP
         public static float radiusMax = 300;
         public static int attackMax = 50;
         public static float intervalmax = 4000f;
-        
-        
-        
-        
-        
-        
-        
-        /// <summary>
-        /// Price
-        /// </summary>
-        
-        public static int tower1Price = 50;
-        public static int tower2Price = 50;
-        public static int tower3Price = 50;
-        public static int tower4Price = 50;
-        public static int tower5Price = 50;
-        public static int tower6Price = 50;
 
-        //<End>
-
-
-        #region Input
-        public static int startingScore;
+        #region Input Enemy
+        public static int enemyStartingHP = 10;
         public static int enemyPerWave;
         public static float timeBetweenWave;
         public static int waveQuantity;
         public static List<int[]> enemyEachWave = new List<int[]>();
+        #endregion
+
+        #region Input Player
+        public static float basicEnemySpeed = 0.5f;
+        public static int numberOfTowers = 6;
+        public static int Tower5Radius = 150;
+        public static int Tower5Attack = 0;
+        public static int Tower5Price = 600;
+
+        public static int Tower4Radius = 300;
+        public static int Tower4Attack = 70;
+        public static int Tower4Price = 1200;
+
+        public static int Tower3Radius = 210;
+        public static int Tower3Attack = 15;
+        public static int Tower3Price = 500;
+
+        public static int Tower2Radius = 150;
+        public static int Tower2Attack = 10;
+        public static int Tower2Price = 250;
+
+        public static int Tower1Radius = 120;
+        public static int Tower1Attack = 1;
+        public static int Tower1Price = 100;
+
+        public static int Tower0Radius = 150;
+        public static int Tower0Attack = 1;
+        public static int Tower0Price = 70;
+        public static int HP = 100;
         #endregion
     }
 }
