@@ -28,7 +28,7 @@ namespace TowerDefenseOOP
         public static SpriteFont playerScoreFont;
         float timer;
         int enemyPerWave;
-        public static int goldHave = Container.startingScore;
+        public static int goldHave;
         public static SoundManager sm = new SoundManager();
         Container.GameState CurrentState = Container.GameState.MainMenu;
         //button o menu game
@@ -38,7 +38,7 @@ namespace TowerDefenseOOP
         MouseState mouse;
         buttonManager btM;          //quản lý các button
         HUD hud;            //In điểm
-
+        public static Vector2 windowPos;
         Input input = new Input();      //Nhập input từ file text vào
         int wave = 0;       //Thể hiện lượt tấn công
         int temp = 1;       
@@ -54,11 +54,12 @@ namespace TowerDefenseOOP
             Content.RootDirectory = "Content";
             btM = new buttonManager(graphics);
             Input.LoadInput(1);
+            windowPos = new Vector2(Window.ClientBounds.X, Window.ClientBounds.Y);
         }
 
         protected override void Initialize()
         {
-            Mouse.SetPosition(0, 0);
+            Mouse.WindowHandle = Window.Handle;
             SpriteBatchEx.GraphicsDevice = GraphicsDevice;  //Khởi tạo công cụ vẽ
             base.Initialize();
         }
@@ -69,8 +70,8 @@ namespace TowerDefenseOOP
         /// </summary>
         protected override void LoadContent()
         {
+            Container.radiusTexture = Content.Load<Texture2D>("radius");
             baseButton = Content.Load<Texture2D>("base_build");
-
             int maplevel = 1;
             level = new Level(map, maplevel);
             level.LoadContent(Content);
@@ -92,7 +93,7 @@ namespace TowerDefenseOOP
             enemyPerWave = Container.enemyPerWave;
             playerScoreFont = Content.Load<SpriteFont>("georgia");      //MỚi thêm
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mouse = Mouse.GetState();
+            Mouse.SetPosition(Container.scrWidth/2, Container.scrHeight/2);
         }
 
         protected override void Update(GameTime gameTime)
@@ -100,14 +101,11 @@ namespace TowerDefenseOOP
             //Tu update MainMenu
             //<Start>
             mouse = Mouse.GetState();
-            btM.Update(CurrentState, mouse, goldHave, gameTime);
+            btM.Update(CurrentState, mouse, goldHave, gameTime,wave);
             CurrentState = btM.GameState;
-
             // check Exit
-
             if (CurrentState == Container.GameState.Exit)
                 Exit();
-
             if(CurrentState==Container.GameState.MainMenu)
             {
                 //Load nhạc nền menu
@@ -120,8 +118,14 @@ namespace TowerDefenseOOP
             }
             if (CurrentState == Container.GameState.Playing)
             {
-                //Tắt nhạc nền menu
-                MediaPlayer.Stop();
+                
+                //Tắt nhạc nền menu, bật nhạc nền epic
+                if (temp == 0)
+                {
+                    MediaPlayer.Play(sm.bgMusic);
+                    MediaPlayer.Volume = 0.5f;
+                    temp--;
+                }
                 if (enemyPerWave > 0)           //Nếu chưa hết một lượt tấn công
                 {
                     timer += 3;
@@ -140,7 +144,9 @@ namespace TowerDefenseOOP
                                     break;
                                 }
                                 else
+                                {
                                     sttEnemy++;
+                                }
                             }
                             enemyPerWave--;
                             if (enemyPerWave == 0)
@@ -150,7 +156,7 @@ namespace TowerDefenseOOP
                 }
                 else
                 {
-                    timer += 2;
+                    timer += 5;
                     if (timer > Container.timeBetweenWave)
                     {
                         wave++;
@@ -187,7 +193,6 @@ namespace TowerDefenseOOP
             hud = new HUD(new Vector2(mouse.X, mouse.Y), playerScoreFont, new Vector2(0,50));
             hud.Update(gameTime);
             base.Update(gameTime);
-
         }
         protected override void Draw(GameTime gameTime)
         {
@@ -196,7 +201,6 @@ namespace TowerDefenseOOP
 
             spriteBatch.Begin();
             //ButtonManager.Draw(spriteBatch, CurrentState);
-            btM.Draw(spriteBatch, CurrentState);
             
             if (CurrentState == Container.GameState.Playing)
             {
@@ -210,6 +214,7 @@ namespace TowerDefenseOOP
                     e.Draw(spriteBatch);
             }
             hud.Draw(spriteBatch);
+            btM.Draw(spriteBatch, CurrentState);
             spriteBatch.End();
             base.Draw(gameTime);
         }

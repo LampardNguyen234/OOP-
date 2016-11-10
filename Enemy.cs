@@ -81,13 +81,10 @@ namespace TowerDefenseOOP
             position = new Vector2(0, 0);
             center = new Vector2(0, 0);
             origin = new Vector2(Container.enemyTextureSize / 2);
-            attack = 5 * level;
-            startingHP = Container.enemyStartingHP;
-            currentHP = startingHP;
-            bountyGiven = 25 * level;
+            attack = 2 * level;
+            bountyGiven = 10 * level;
             frameX = 0;
             frameY = 0;
-            speed = 1f+ Container.basicEnemySpeed * (float)level/Container.numberOfEnemies;
             textureInterval = 200f;
             timer = 0;
             enemyTextureWidth = texture.Width / Container.enemyTextureSize;
@@ -96,6 +93,19 @@ namespace TowerDefenseOOP
             healthBarRect = new Rectangle(((int)center.X + Container.healthBarWidth/2), (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
             isWayPointsSet = false;
+            if (level == 1 || level==2)
+                speed = 0.8f;
+            if (level == 3)
+                speed =1.2f;
+            if (level == 5 || level == 4)
+                speed = 0.6f;
+            if (level == 6)
+                speed = 2f;
+            if (level == 7)
+                speed = 2.2f;
+            //Máu
+            startingHP = Container.enemyStartingHP*level;
+            currentHP = startingHP;
         }
 
 
@@ -320,8 +330,14 @@ namespace TowerDefenseOOP
             healthBarRect = new Rectangle((int)center.X - Container.healthBarWidth/2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             //Tính toán góc quay của texture enemy
             calculateRotationAngle();
-            if (!isAlive && wayPoints.Count != 0)
-                Game1.sm.explodeSound.Play();
+            if (!isAlive)
+                if (wayPoints.Count != 0)
+                {
+                    Game1.goldHave += bountyGiven;
+                    Game1.sm.explodeSound.Play();
+                }
+                else
+                    Container.HP -= attack;
         }
 
         //Hàm Draw

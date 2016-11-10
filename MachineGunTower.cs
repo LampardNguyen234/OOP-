@@ -17,12 +17,12 @@ namespace TowerDefenseOOP
         public MachineGunTower(Texture2D texture, int level, Vector2 postition, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,postition,baseTexture,texture,bulletTexture,explosionTexture)
         {
-            radius = 100f;
-            attack = 5;
-            price = 70;
+            radius = Container.Tower2Radius;
+            attack = Container.Tower2Attack;
+            price = Container.Tower2Price;
             smallestRange = radius;
             timer = 400f;
-            interval = 300f;
+            interval = 1500f;
         }
 
         //Update

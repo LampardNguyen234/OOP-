@@ -84,52 +84,75 @@ namespace TowerDefenseOOP
         //Hàm update
         public void Update(GameTime gameTime, List<Enemy> enemyList, int retButton)
         {
-            mouseManager.Update(gameTime, retButton);
+            mouseManager.Update(gameTime, retButton, ackackTowerList, dualMachineTowerList, machineGunTowerList, lazeTowerList, rocketTowerList, enhancingTowerList);
             #region Xây dựng các tower
             switch (MouseManager.buildTower)
             {
-                case 0:
+                case 2:
                     {
-                        //Trường hợp súng máy hai nòng
-                        MachineGunTower mGT = new MachineGunTower(towerTextureList[0], 2, MouseManager.position, baseTexture, bulletTextureList[0], explosionTexture);
-                        machineGunTowerList.Add(mGT);
+                        if (CheckBuildingAvailable(Container.Tower0Price))
+                        {
+                            //Trường hợp súng máy
+                            MachineGunTower mGT = new MachineGunTower(towerTextureList[2], 3, MouseManager.position, baseTexture, bulletTextureList[0], explosionTexture);
+                            machineGunTowerList.Add(mGT);
+                            Game1.goldHave -= Container.Tower0Price;
+                        }
                         break;
                     }
                 case 1:
                 {
                     //Trường hợp súng máy hai nòng
-                    DualMachineGunTower dmgt = new DualMachineGunTower(towerTextureList[1], 1, MouseManager.position, baseTexture, bulletTextureList[1], explosionTexture);
-                    dualMachineTowerList.Add(dmgt);
+                    if (CheckBuildingAvailable(Container.Tower1Price))
+                    {
+                        DualMachineGunTower d = new DualMachineGunTower(towerTextureList[1], 2, MouseManager.position, baseTexture, bulletTextureList[0], explosionTexture);
+                        dualMachineTowerList.Add(d);
+                        Game1.goldHave -= Container.Tower1Price;
+                    }
                     break;
                 }
-                case 2:
+                case 0:
                 {
-                    ackackTower ackTower = new ackackTower(towerTextureList[2], 0, MouseManager.position, baseTexture, bulletTextureList[2], explosionTexture);
-                    ackackTowerList.Add(ackTower);
+                    if (CheckBuildingAvailable(Container.Tower2Price))
+                    {
+                        ackackTower ackTower = new ackackTower(towerTextureList[0], 1, MouseManager.position, baseTexture, bulletTextureList[2], explosionTexture);
+                        ackackTowerList.Add(ackTower);
+                        Game1.goldHave -= Container.Tower2Price;
+                    }
                     break;
                 }
                 case 3:
                 {
                     //Trường hợp súng laze
-                    LazerTower lt = new LazerTower(towerTextureList[3], 3, MouseManager.position, baseTexture, bulletTextureList[3], explosionTexture);
-                    lazeTowerList.Add(lt);
+                    if (CheckBuildingAvailable(Container.Tower3Price))
+                    {
+                        LazerTower lt = new LazerTower(towerTextureList[3], 4, MouseManager.position, baseTexture, bulletTextureList[3], explosionTexture);
+                        lazeTowerList.Add(lt);
+                        Game1.goldHave -= Container.Tower3Price;
+                    }
                     break;
                 }
                 case 4:
                 {
                     //Trường hợp bệ phóng tên lửa
-                    RocketTower rT = new RocketTower(towerTextureList[4], 4, MouseManager.position, baseTexture, bulletTextureList[4], explosionTexture);
-                    rocketTowerList.Add(rT);
+                    if (CheckBuildingAvailable(Container.Tower4Price))
+                    {
+                        RocketTower rT = new RocketTower(towerTextureList[4], 5, MouseManager.position, baseTexture, bulletTextureList[4], explosionTexture);
+                        rocketTowerList.Add(rT);
+                        Game1.goldHave -= Container.Tower4Price;
+                    }
                     break;
                 }
                 case 5:
                 {
                     //Trường hợp Tháp tăng cường năng lượng
-                    EnhancingTower eT = new EnhancingTower(towerTextureList[5], 5, MouseManager.position, baseTexture, null, null);
-                    enhancingTowerList.Add(eT);
+                    if (CheckBuildingAvailable(Container.Tower5Price))
+                    {
+                        EnhancingTower eT = new EnhancingTower(towerTextureList[5], 6, MouseManager.position, baseTexture, null, null);
+                        enhancingTowerList.Add(eT);
+                        Game1.goldHave -= Container.Tower5Price;
+                    }
                     break;
                 }
-
             }
             #endregion
             //Update Towers
@@ -223,6 +246,8 @@ namespace TowerDefenseOOP
                 eT.Enhancing(dualMachineTowerList);
                 eT.Enhancing(lazeTowerList);
                 eT.Enhancing(rocketTowerList);
+                eT.Enhancing(machineGunTowerList);
+                eT.Update(gameTime);
             }
 
         }
@@ -283,6 +308,13 @@ namespace TowerDefenseOOP
                     eht.Draw(spriteBatch);
                 }
             }
+        }
+
+        public bool CheckBuildingAvailable(int price)
+        {
+            if (price > Game1.goldHave)
+                return false;
+            return true;
         }
     }
 }

@@ -44,7 +44,9 @@ namespace TowerDefenseOOP
         protected int price;
         protected int level;
         protected int frame;   //Thay đổi hình ảnh của Tower
-        protected int frameMaxX;      //Số frame theo chiều rộng (Width)
+        protected int frameMax;      //Số frame theo chiều rộng (Width)
+        protected int frameY;   //Thay đổi hình ảnh của Tower
+        protected int frameMaxY;      //Số frame theo chiều rộng (Width)
         public Vector2 Center
         {
             get { return this.center; }
@@ -75,6 +77,15 @@ namespace TowerDefenseOOP
             get { return isUpgradedByPlayer; }
             set { isUpgradedByPlayer = value; }
         }
+
+        bool hover;      //Kiểm tra xem trỏ chuột không
+
+        public bool Hover
+        {
+            get { return hover; }
+            set { hover = value; }
+        }
+
         #endregion
 
         //Constructor
@@ -93,13 +104,16 @@ namespace TowerDefenseOOP
             smallestRange = radius = 0;
             this.level = level;
             frame = 0;
-            frameMaxX = towerTexture.Width / Container.towerSize;
+            frameMax = towerTexture.Width / Container.towerSize;
+            frameY = 0;
+            frameMaxY = towerTexture.Height / Container.towerSize;
             BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);
             isUpgradedByPlayer = false;
             isUpgradedByTower = false;
             isTargetAttacked = false;
             explosion = new Animation(position, animationTexture);
             explosion.IsVisible = false;
+            hover = false;
         }
 
         //Kiểm tra xem enemy có nằm trong bán kính không
@@ -168,8 +182,10 @@ namespace TowerDefenseOOP
             }
             if (isAlive)
             {
-                spriteBatch.Draw(baseTexture, position, null, Color.White, 0f, origin1, 0.7f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(baseTexture, position, null, Color.White, 0f, origin1, Container.enemyTextureScale*0.75f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(towerTexture, position, BoundingBox, Color.White, rotation, origin, Container.enemyTextureScale, SpriteEffects.None, 0f);
+                if (hover)
+                    spriteBatch.Draw(Container.radiusTexture, position, null, Color.White * 0.2f, 0, new Vector2(Container.radiusTexture.Width/2), 2 * (float)radius / Container.radiusTexture.Width, SpriteEffects.None, 0f);
             }
             if (explosion.IsVisible)
                 explosion.Draw(spriteBatch);
@@ -211,9 +227,9 @@ namespace TowerDefenseOOP
         //Hàm nâng cấp Tower
         public void Upgrade()
         {
-            radius += Container.radiusMax / 10;
-            attack += Container.attackMax / 10;
-            interval -= Container.intervalmax / 5;
+            radius += radius * 20 / 100 ;
+            attack += attack * 20 / 100 ;
+            interval = interval * 85 / 100 ;
             price += price % 10 / 100;
             IsUpgradedByPlayer = true;
         }

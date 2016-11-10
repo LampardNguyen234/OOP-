@@ -17,9 +17,9 @@ namespace TowerDefenseOOP
         public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture, explosionTexture)
         {
-            radius = Container.radiusMax/2;
-            attack = Container.attackMax;
-            price = 1200;
+            radius = Container.Tower4Radius;
+            attack = Container.Tower4Attack;
+            price = Container.Tower4Price;
             smallestRange = radius;
             timer = 4000f; 
             interval = Container.intervalmax;
@@ -37,7 +37,7 @@ namespace TowerDefenseOOP
             
             if (timer > interval)
             {
-                if (frame < frameMaxX - 1)      
+                if (frame < frameMax - 1)      
                 {
                     if (target != null)
                     {
