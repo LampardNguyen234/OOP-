@@ -8,6 +8,7 @@ namespace TowerDefenseOOP
 {
     class Input
     {
+
         public static void LoadInput(int level)
         {
             string s = "Input" + level.ToString() +".txt";
@@ -16,7 +17,7 @@ namespace TowerDefenseOOP
             string buf;
             //Điểm số bắt đầu
             buf = (string)reader.ReadLine();
-            Game1.goldHave = Int32.Parse(buf);
+            Container.startingScore = Int32.Parse(buf);
             //Số lượng enemy trong mỗi lượt tấn công
             buf = (string)reader.ReadLine();
             Container.enemyPerWave = Int32.Parse(buf);

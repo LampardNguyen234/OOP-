@@ -75,27 +75,27 @@ namespace TowerDefenseOOP
 
             tower1Button = new towerButton(Content.Load<Texture2D>("tower_000_build"), Content.Load<Texture2D>("tower1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower1Button.SetPosition(Container.btnTower1Position);
-            tower1Button.setPrice(Container.Tower0Price);
+            tower1Button.setPrice(Container.tower1Price);
 
             tower2Button = new towerButton(Content.Load<Texture2D>("tower_001_build"), Content.Load<Texture2D>("tower2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower2Button.SetPosition(Container.btnTower2Position);
-            tower2Button.setPrice(Container.Tower1Price);
+            tower2Button.setPrice(Container.tower2Price);
 
             tower3Button = new towerButton(Content.Load<Texture2D>("tower_002_build"), Content.Load<Texture2D>("tower3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower3Button.SetPosition(Container.btnTower3Position);
-            tower3Button.setPrice(Container.Tower2Price);
+            tower3Button.setPrice(Container.tower3Price);
 
             tower4Button = new towerButton(Content.Load<Texture2D>("tower_003_build"), Content.Load<Texture2D>("tower4detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower4Button.SetPosition(Container.btnTower4Position);
-            tower4Button.setPrice(Container.Tower3Price);
+            tower4Button.setPrice(Container.tower4Price);
 
             tower5Button = new towerButton(Content.Load<Texture2D>("tower_004_build"), Content.Load<Texture2D>("tower5detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower5Button.SetPosition(Container.btnTower5Position);
-            tower5Button.setPrice(Container.Tower4Price);
+            tower5Button.setPrice(Container.tower5Price);
 
             tower6Button = new towerButton(Content.Load<Texture2D>("tower_005_build"), Content.Load<Texture2D>("tower6detail"), graphics.GraphicsDevice, Container.btnTowerSize);
             tower6Button.SetPosition(Container.btnTower6Position);
-            tower6Button.setPrice(Container.Tower5Price);
+            tower6Button.setPrice(Container.tower6Price);
 
             pauseButton = new cButton(Content.Load<Texture2D>("pause"), graphics.GraphicsDevice, Container.btnPauseSize);
             pauseButton.SetPosition(Container.btnPausePosition);
@@ -129,38 +129,36 @@ namespace TowerDefenseOOP
             playMenuTexture = Content.Load<Texture2D>("PlayMenu");
 
         }
-        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime, int wave)
+        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime,int wave)
         {
             GameState = CurrentState;
-            KeyboardState state = new KeyboardState();
-             state = Keyboard.GetState();
             if (Container.HP < 1)
                 GameState = Container.GameState.GameOver;
             if (wave == Container.waveQuantity)
                 GameState = Container.GameState.Win;
             switch (GameState)
             {
-                case Container.GameState.GameOver:          //Trường hợp thua
+                case Container.GameState.GameOver:
                     backButton.Update(mouse);
-                    if (backButton.isClicked == true)       //Chơi lại
+                    if (backButton.isClicked == true)
                     {
                         GameState = Container.GameState.MainMenu;
                         Container.HP = 10;
                         wave = 0;
                         goldHave = 400;
-                    }
+                    }     
                     break;
-                case Container.GameState.Win:           //Trường hợp thắng
+                case Container.GameState.Win:
                     backButton.Update(mouse);
-                    if (backButton.isClicked == true)       //Chơi lại
+                    if (backButton.isClicked == true)
                     {
                         GameState = Container.GameState.MainMenu;
                         Container.HP = 10;
                         wave = 0;
                         goldHave = 400;
-                    }
+                    }     
                     break;
-                case Container.GameState.MainMenu:          //Main menu
+                case Container.GameState.MainMenu:
                     playButton.Update(mouse);
                     creditButton.Update(mouse);
                     introButton.Update(mouse);
@@ -179,69 +177,61 @@ namespace TowerDefenseOOP
                         GameState = Container.GameState.Intro;
                     }
                     break;
-                case Container.GameState.Intro:         //Giới thiệu
-                    if (backButton.isClicked == true || state.IsKeyDown(Keys.Escape))
+                case Container.GameState.Intro:
+                    if (backButton.isClicked == true)
                         GameState = Container.GameState.MainMenu;
                     backButton.Update(mouse);
                     break;
-                case Container.GameState.Tacgia:        //Tác giả
-                    if (backButton.isClicked == true || state.IsKeyDown(Keys.Escape))
+                case Container.GameState.Tacgia:
+                    if (backButton.isClicked == true)
                         GameState = Container.GameState.MainMenu;
                     backButton.Update(mouse);
                     break;
-                case Container.GameState.Playing:       //Đang chơi
+                case Container.GameState.Playing:
                     retButton = -1;
-                    if (pauseButton.isClicked == true || state.IsKeyDown(Keys.Escape))  //Nếu nhấn nut pause hoặc escape
-                    {
+                    if (pauseButton.isClicked == true)
                         GameState = Container.GameState.Pausing;
-                        pauseButton.Update(mouse);
-                    }
-                    else
-                    {
-                        resumeButton.Update(mouse);
-                        tower1Button.Update(mouse, goldHave);
-                        tower2Button.Update(mouse, goldHave);
-                        tower3Button.Update(mouse, goldHave);
-                        tower4Button.Update(mouse, goldHave);
-                        tower5Button.Update(mouse, goldHave);
-                        tower6Button.Update(mouse, goldHave);
-                        specialSkill1Button.Update(mouse, goldHave);
-                        specialSkill2Button.Update(mouse, goldHave);
-                        specialSkill3Button.Update(mouse, goldHave);
-                        if (tower1Button.isClicked == true)
-                            RetButton = 0;
-                        if (tower2Button.isClicked == true)
-                            RetButton = 1;
-                        if (tower3Button.isClicked == true)
-                            RetButton = 2;
-                        if (tower4Button.isClicked == true)
-                            RetButton = 3;
-                        if (tower5Button.isClicked == true)
-                            RetButton = 4;
-                        if (tower6Button.isClicked == true)
-                            RetButton = 5;
-                        if (specialSkill1Button.isClicked == true)
-                            RetButton = 6;
-                        if (specialSkill2Button.isClicked == true)
-                            RetButton = 7;
-                        if (specialSkill3Button.isClicked == true)
-                            RetButton = 8;
-                        if (pauseButton.isClicked == true)
-                            RetButton = 9;
-                        if (onMusicButton.isClicked == true)
-                            RetButton = 11;
-                        if (offMusicButton.isClicked == true)
-                            RetButton = 12;
-                    }
-                    break;
-                case Container.GameState.Pausing:               //Trường hợp pause
-                    if (resumeButton.isClicked == true || state.IsKeyDown(Keys.Space))
-                    {
+                    pauseButton.Update(mouse);
+                    if (resumeButton.isClicked == true)
                         GameState = Container.GameState.Playing;
-                        RetButton = 10;
-                    }
                     resumeButton.Update(mouse);
+                    tower1Button.Update(mouse, goldHave);
+                    tower2Button.Update(mouse, goldHave);
+                    tower3Button.Update(mouse, goldHave);
+                    tower4Button.Update(mouse, goldHave);
+                    tower5Button.Update(mouse, goldHave);
+                    tower6Button.Update(mouse, goldHave);
+                    specialSkill1Button.Update(mouse, goldHave);
+                    specialSkill2Button.Update(mouse, goldHave);
+                    specialSkill3Button.Update(mouse, goldHave);
+                    if (tower1Button.isClicked == true) 
+                        RetButton = 0;
+                    if (tower2Button.isClicked == true)
+                        RetButton = 1;
+                    if (tower3Button.isClicked == true)
+                        RetButton = 2;
+                    if (tower4Button.isClicked == true)
+                        RetButton = 3;
+                    if (tower5Button.isClicked == true)
+                        RetButton = 4;
+                    if (tower6Button.isClicked == true)
+                        RetButton = 5;
+                    if (specialSkill1Button.isClicked == true)
+                        RetButton = 6;
+                    if (specialSkill2Button.isClicked == true)
+                        RetButton = 7;
+                    if (specialSkill3Button.isClicked == true)
+                        RetButton = 8;
+                    if (pauseButton.isClicked == true)
+                        RetButton = 9;
+                    if (resumeButton.isClicked == true)
+                        RetButton = 10;
+                    if (onMusicButton.isClicked == true)
+                        RetButton = 11;
+                    if (offMusicButton.isClicked == true)
+                        RetButton = 12;
                     break;
+                    
             }
             base.Update(gameTime);
         }
@@ -297,10 +287,22 @@ namespace TowerDefenseOOP
                 specialSkill2Button.Draw(spriteBatch);
                 specialSkill3Button.Draw(spriteBatch);
                 break;
+                case Container.GameState.Win:
+                // ve them 1 cai Win
+   
+                backButton.Draw(spriteBatch);
+                    
+                break;
+                case Container.GameState.GameOver:
+                //ve them 1 cai game over
+                backButton.Draw(spriteBatch);
+
+                break;
                 case Container.GameState.Playing:
 
                     spriteBatch.Draw(playMenuTexture, Container.playMenuPosition, Color.White);
                    
+                    //animation.Draw(spriteBatch);
                     // Cac ban ve trong playing thi Update o day
                     //<Start>
                     

@@ -31,7 +31,7 @@ namespace TowerDefenseOOP
                 towerShoot.Add(Content.Load<SoundEffect>(s));
             }
             explodeSound = Content.Load<SoundEffect>("Sound\\explode");
-            bgMusic = Content.Load<Song>("Sound\\epic");
+            bgMusic = Content.Load<Song>("Sound\\theme");
             mainMenu = Content.Load<Song>("Sound\\mainMenu1");
         }
     }
