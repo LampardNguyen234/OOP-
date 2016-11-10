@@ -102,6 +102,12 @@ namespace TowerDefenseOOP
             mouse = Mouse.GetState();
             btM.Update(CurrentState, mouse, goldHave, gameTime);
             CurrentState = btM.GameState;
+
+            // check Exit
+
+            if (CurrentState == Container.GameState.Exit)
+                Exit();
+
             if(CurrentState==Container.GameState.MainMenu)
             {
                 //Load nhạc nền menu
