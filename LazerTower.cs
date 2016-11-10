@@ -16,11 +16,11 @@ namespace TowerDefenseOOP
         public LazerTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
-            radius = Container.Tower3Radius;
-            attack = Container.Tower3Attack;
-            price = Container.Tower3Price;
+            radius = 5*Container.radiusMax /10;
+            attack = 7 * Container.attackMax / 10 ;
+            price = 500;
             smallestRange=0; 
-            interval =2000;
+            interval =Container.intervalmax /3;
             timer = interval;
         }
 

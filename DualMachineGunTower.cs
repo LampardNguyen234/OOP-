@@ -19,12 +19,12 @@ namespace TowerDefenseOOP
         public DualMachineGunTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
-            radius = Container.Tower1Radius;
-            attack = Container.Tower1Attack;
-            price = Container.Tower1Price;
+            radius = 100f;
+            attack = 10;
+            price = 100;
             smallestRange = radius;
             timer = 400f;
-            interval = 1000f;
+            interval = 400f;
             change = 10;
             changeT = Vector2.Transform(new Vector2(0, change)
                 , Matrix.CreateRotationZ(rotation+0.1f));

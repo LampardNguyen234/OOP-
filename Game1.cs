@@ -28,7 +28,7 @@ namespace TowerDefenseOOP
         public static SpriteFont playerScoreFont;
         float timer;
         int enemyPerWave;
-        public static int goldHave;
+        public static int goldHave = Container.startingScore;
         public static SoundManager sm = new SoundManager();
         Container.GameState CurrentState = Container.GameState.MainMenu;
         //button o menu game
@@ -70,6 +70,7 @@ namespace TowerDefenseOOP
         protected override void LoadContent()
         {
             baseButton = Content.Load<Texture2D>("base_build");
+
             int maplevel = 1;
             level = new Level(map, maplevel);
             level.LoadContent(Content);
@@ -133,9 +134,7 @@ namespace TowerDefenseOOP
                                     break;
                                 }
                                 else
-                                {
                                     sttEnemy++;
-                                }
                             }
                             enemyPerWave--;
                             if (enemyPerWave == 0)
@@ -145,7 +144,7 @@ namespace TowerDefenseOOP
                 }
                 else
                 {
-                    timer += 5;
+                    timer += 2;
                     if (timer > Container.timeBetweenWave)
                     {
                         wave++;
@@ -182,6 +181,7 @@ namespace TowerDefenseOOP
             hud = new HUD(new Vector2(mouse.X, mouse.Y), playerScoreFont, new Vector2(0,50));
             hud.Update(gameTime);
             base.Update(gameTime);
+
         }
         protected override void Draw(GameTime gameTime)
         {

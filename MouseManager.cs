@@ -120,36 +120,7 @@ namespace TowerDefenseOOP
             if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900 && retButton!=-1)
             {
                 tempBuildTower = retButton;//Giá trị trả về từ hàm isClick() trong Menu
-                switch(retButton)
-                {
-                    case 0:
-                        if (CheckBuildingAvailable(Container.Tower0Price))
-                            isBuildingTower = true;
-                        break;
-                    case 1:
-                        if (CheckBuildingAvailable(Container.Tower1Price))
-                            isBuildingTower = true;
-                        break;
-                    case 2:
-                        if (CheckBuildingAvailable(Container.Tower2Price))
-                            isBuildingTower = true;
-                        break;
-                    case 3:
-                        if (CheckBuildingAvailable(Container.Tower3Price))
-                            isBuildingTower = true;
-                        break;
-                    case 4:
-                        if (CheckBuildingAvailable(Container.Tower4Price))
-                            isBuildingTower = true;
-                        break;
-                    case 5:
-                        if (CheckBuildingAvailable(Container.Tower5Price))
-                            isBuildingTower = true;
-                        break;
-                    default:
-                        isBuildingTower = true;
-                        break;
-                }
+                isBuildingTower = true;
             }
 
             //RightClick để hủy việc đang chọn Tower
@@ -173,13 +144,7 @@ namespace TowerDefenseOOP
             oldState = mouseState;
         }
 
-        //Kiểm tra xem còn đủ tiền đề mua không
-        public bool CheckBuildingAvailable(int price)
-        {
-            if (price > Game1.goldHave)
-                return false;
-            return true;
-        }
+
         //Hàm vẽ
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -190,8 +155,8 @@ namespace TowerDefenseOOP
                 color = Color.Red;
             if (isBuildingTower)
             {
-                spriteBatch.Draw(mouseTexture, position, null, color,0f, origin, 1f, SpriteEffects.None, 0f);
-                if (tempBuildTower != -1 && tempBuildTower<6)
+                spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
+                if (tempBuildTower != -1)
                     spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
             }

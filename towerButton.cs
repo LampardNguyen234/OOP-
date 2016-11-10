@@ -42,7 +42,8 @@ namespace TowerDefenseOOP
                
             }
             else
-            {   
+            {
+                
                 isClicked = false;
                 hover = false;
             }
@@ -55,11 +56,8 @@ namespace TowerDefenseOOP
         {
             spriteBatch.Draw(Game1.baseButton, position, null, colour, 0, origin, 0.7f, SpriteEffects.None, 0f);
             spriteBatch.Draw(texture, position, null,colour,0,origin,1f,SpriteEffects.None,0f);
-            if (hover)
-            {
-                spriteBatch.Draw(Game1.baseButton, position, null, colour, 0, origin, 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, position, null, colour, 0, origin, 1f/0.7f, SpriteEffects.None, 0f);
-            }
+            //if (hover)
+            //    spriteBatch.Draw(buttondetail,new Rectangle((int)position.X-30,(int)position.Y-30,100,150), new Rectangle(0, 0, 130, 170), Color.White);
         }
         public void setPrice(int price)
         {

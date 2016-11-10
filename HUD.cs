@@ -36,11 +36,7 @@ namespace TowerDefenseOOP
         public void Draw(SpriteBatch spriteBatch)
         {
             if (showHUD == true)
-            {
-                spriteBatch.DrawString(playerScoreFont, "HP: " + position.X + "," + position.Y, playerScorePos, Color.Red);
-                spriteBatch.DrawString(playerScoreFont, "HP: " + Container.HP, new Vector2(800,0), Color.Red);
-                spriteBatch.DrawString(playerScoreFont, "$$: " + Game1.goldHave, new Vector2(800, 20), Color.Blue);
-            }
+                spriteBatch.DrawString(playerScoreFont, "Score - " +  position.X +"," +position.Y, playerScorePos, Color.Red);
         }
     }
 }
