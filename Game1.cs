@@ -32,14 +32,16 @@ namespace TowerDefenseOOP
         public static SoundManager sm = new SoundManager();
         Container.GameState CurrentState = Container.GameState.MainMenu;
         //button o menu game
-        
+
+        public static Texture2D baseButton;
+
         MouseState mouse;
         buttonManager btM;          //quản lý các button
         HUD hud;            //In điểm
 
-        Input input = new Input();
-        int wave = 0;
-        int temp = 1;
+        Input input = new Input();      //Nhập input từ file text vào
+        int wave = 0;       //Thể hiện lượt tấn công
+        int temp = 1;       
         //
         public Game1()
         {
@@ -50,16 +52,15 @@ namespace TowerDefenseOOP
             this.IsMouseVisible = true;
             this.Window.Title = "Tower Defense";
             Content.RootDirectory = "Content";
-            Mouse.SetPosition(0, 0);
             btM = new buttonManager(graphics);
             Input.LoadInput(1);
         }
 
         protected override void Initialize()
         {
+            Mouse.SetPosition(0, 0);
             SpriteBatchEx.GraphicsDevice = GraphicsDevice;  //Khởi tạo công cụ vẽ
             base.Initialize();
-            Mouse.SetPosition(0, 0);
         }
 
         /// <summary>
@@ -68,10 +69,8 @@ namespace TowerDefenseOOP
         /// </summary>
         protected override void LoadContent()
         {
-            enemyPerWave = Container.enemyPerWave;
-            playerScoreFont = Content.Load<SpriteFont>("georgia");      //MỚi thêm
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            mouse=Mouse.GetState();
+            baseButton = Content.Load<Texture2D>("base_build");
+
             int maplevel = 1;
             level = new Level(map, maplevel);
             level.LoadContent(Content);
@@ -90,6 +89,10 @@ namespace TowerDefenseOOP
 
             sm.LoadContent(Content);    //Load âm thanh
             SoundEffect.MasterVolume = 0.1f;
+            enemyPerWave = Container.enemyPerWave;
+            playerScoreFont = Content.Load<SpriteFont>("georgia");      //MỚi thêm
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            mouse = Mouse.GetState();
         }
 
         protected override void Update(GameTime gameTime)

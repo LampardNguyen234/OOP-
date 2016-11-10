@@ -370,7 +370,7 @@ namespace TowerDefenseOOP
                     
                 }
             }
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+           // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
         }
     }
 }

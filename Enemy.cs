@@ -87,8 +87,8 @@ namespace TowerDefenseOOP
             bountyGiven = 25 * level;
             frameX = 0;
             frameY = 0;
-            speed = Container.basicEnemySpeed;
-            textureInterval = 20f;
+            speed = 1f+ Container.basicEnemySpeed * (float)level/Container.numberOfEnemies;
+            textureInterval = 200f;
             timer = 0;
             enemyTextureWidth = texture.Width / Container.enemyTextureSize;
             enemyTextureHeight= texture.Height / Container.enemyTextureSize;
@@ -320,6 +320,8 @@ namespace TowerDefenseOOP
             healthBarRect = new Rectangle((int)center.X - Container.healthBarWidth/2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             //Tính toán góc quay của texture enemy
             calculateRotationAngle();
+            if (!isAlive && wayPoints.Count != 0)
+                Game1.sm.explodeSound.Play();
         }
 
         //Hàm Draw

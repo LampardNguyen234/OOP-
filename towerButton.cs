@@ -13,7 +13,7 @@ namespace TowerDefenseOOP
     {
         public static int Price;
         Texture2D texture;
-        Vector2 position;
+        Vector2 position, origin;
         Rectangle rectangle;
         Texture2D buttondetail;
         Color colour = new Color(255, 255, 255, 255);
@@ -25,7 +25,7 @@ namespace TowerDefenseOOP
             //scrW = 900 scrH 600
             //imW      imH
             size = tempSize;
-            
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
         bool hover;
         public bool isClicked;
@@ -54,9 +54,10 @@ namespace TowerDefenseOOP
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, rectangle, colour);
-            if (hover)
-                spriteBatch.Draw(buttondetail,new Rectangle((int)position.X+30,(int)position.Y+30,130,170), new Rectangle(0, 0, 130, 170), Color.White);
+            spriteBatch.Draw(Game1.baseButton, position, null, colour, 0, origin, 0.7f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, null,colour,0,origin,1f,SpriteEffects.None,0f);
+            //if (hover)
+            //    spriteBatch.Draw(buttondetail,new Rectangle((int)position.X-30,(int)position.Y-30,100,150), new Rectangle(0, 0, 130, 170), Color.White);
         }
         public void setPrice(int price)
         {
