@@ -129,35 +129,11 @@ namespace TowerDefenseOOP
             playMenuTexture = Content.Load<Texture2D>("PlayMenu");
 
         }
-        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime,int wave)
+        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime)
         {
             GameState = CurrentState;
-            if (Container.HP < 1)
-                GameState = Container.GameState.GameOver;
-            if (wave == Container.waveQuantity)
-                GameState = Container.GameState.Win;
             switch (GameState)
             {
-                case Container.GameState.GameOver:
-                    backButton.Update(mouse);
-                    if (backButton.isClicked == true)
-                    {
-                        GameState = Container.GameState.MainMenu;
-                        Container.HP = 10;
-                        wave = 0;
-                        goldHave = 400;
-                    }     
-                    break;
-                case Container.GameState.Win:
-                    backButton.Update(mouse);
-                    if (backButton.isClicked == true)
-                    {
-                        GameState = Container.GameState.MainMenu;
-                        Container.HP = 10;
-                        wave = 0;
-                        goldHave = 400;
-                    }     
-                    break;
                 case Container.GameState.MainMenu:
                     playButton.Update(mouse);
                     creditButton.Update(mouse);
@@ -286,17 +262,6 @@ namespace TowerDefenseOOP
                 specialSkill1Button.Draw(spriteBatch);
                 specialSkill2Button.Draw(spriteBatch);
                 specialSkill3Button.Draw(spriteBatch);
-                break;
-                case Container.GameState.Win:
-                // ve them 1 cai Win
-   
-                backButton.Draw(spriteBatch);
-                    
-                break;
-                case Container.GameState.GameOver:
-                //ve them 1 cai game over
-                backButton.Draw(spriteBatch);
-
                 break;
                 case Container.GameState.Playing:
 
