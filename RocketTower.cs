@@ -17,14 +17,13 @@ namespace TowerDefenseOOP
         public RocketTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture, explosionTexture)
         {
-            radius = Container.radiusMax/2;
-            attack = Container.attackMax;
-            price = 1200;
+            radius = Container.radiusList[4];
+            attack = Container.attackList[4];
+            price = Container.priceList[4];
             smallestRange = radius;
-            timer = 4000f; 
-            interval = Container.intervalmax;
+            timer = 2000f;
+            interval = 2000f;
         }
-
 
         //Update
         public void Update(GameTime gameTime, List<Enemy>enemyList)
@@ -32,12 +31,12 @@ namespace TowerDefenseOOP
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if(target==null)
             {
-                GetClosestEnemy(enemyList);   
+                GetClosestEnemy(enemyList); 
             }
             
             if (timer > interval)
             {
-                if (frame < frameMaxX - 1)      
+                if (frame < frameMax - 1)      
                 {
                     if (target != null)
                     {
@@ -45,6 +44,8 @@ namespace TowerDefenseOOP
                         isTargetAttacked = true;
                         Bullet bullet = new Bullet(position, level, bulletTexture, target);
                         bulletList.Add(bullet);
+                        target.isLockedByRocket = true;
+                        target.Update(gameTime);
                         Game1.sm.towerShoot[4].Play();
                         //Thay đổi khung hình
                         frame++;
@@ -72,6 +73,7 @@ namespace TowerDefenseOOP
                 if(bullet.Collision())               //Trường hợp bullet đụng target
                 {
                     bullet.target.CurrentHP -= attack;
+                    bullet.target.isLockedByRocket = false;
                     bullet.Kill();
                 }
 
@@ -97,7 +99,7 @@ namespace TowerDefenseOOP
                     i--;
                 }
             }
-           BoundingBox = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
+           sourceRectangle = new Rectangle(frame * Container.towerSize, 0, Container.towerSize, Container.towerSize);      //Cập nhật frame của Tower
            base.Update(gameTime);
         }
 

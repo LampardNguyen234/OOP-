@@ -11,33 +11,40 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 namespace TowerDefenseOOP
 {
+    /// <summary>
+    /// Class đặc xử lý các button có trong game
+    /// </summary>
     class buttonManager:Microsoft.Xna.Framework.Game
     {
           cButton playButton;
           cButton introButton;
           cButton creditButton;
           cButton backButton;
-          towerButton tower1Button;
-          towerButton tower2Button;
-          towerButton tower3Button;
-          towerButton tower4Button;
-          towerButton tower5Button;
-          towerButton tower6Button;
+
+            //Các buttonTower có trong menu
+          List<towerButton> towerButtonList;
 
         Texture2D mainMenuTexture;
         Texture2D huongDanTexture;
         Texture2D tacGiaTexture;
-        Texture2D playMenuTexture;
         Texture2D pauseStateTexture;
 
-          cButton pauseButton;
-          cButton resumeButton;
-          cButton offMusicButton;
-          cButton onMusicButton;
+        //Các texture trong menu field
+        Texture2D menuField;
+        Texture2D infoBlock;
+        Texture2D towerBlock;
+        Texture2D skillBlock;
 
-          towerButton specialSkill1Button;
-          towerButton specialSkill2Button;
-          towerButton specialSkill3Button;
+        public cButton pauseButton;              //Nút dừng
+        public cButton resumeButton;             //Nút tiếp tục
+        public cButton offMusicButton;           //Nút tắt âm thanh
+        public cButton onMusicButton;            //Nút bật âm thanh
+        public cButton nextWave;                //Nút đợt tấn công tiếp theo
+        public cButton replayButton;               //Nút replay
+
+        public cButton specialSkill1Button;
+        public cButton specialSkill2Button;
+        public cButton specialSkill3Button;
 
           public Container.GameState GameState;
 
@@ -48,18 +55,22 @@ namespace TowerDefenseOOP
               get { return this.retButton; }
               set { this.retButton = value; }
           }
+          bool isSoundOn;
+          bool isPauseSet;
 
         GraphicsDeviceManager graphics;
         public buttonManager(GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
+            isSoundOn = true;
+            isPauseSet = false;
         }
         public  void LoadContent(ContentManager Content)
         {
              //Tu update Button
             //<Start>
             // Load button
-            
+            towerButtonList = new List<towerButton>(6);
             playButton = new cButton(Content.Load<Texture2D>("buttonPlay"), graphics.GraphicsDevice, Container.btnMenuGameSize);
             playButton.SetPosition(Container.btnPlayPosition);
 
@@ -69,53 +80,35 @@ namespace TowerDefenseOOP
             creditButton = new cButton(Content.Load<Texture2D>("buttonTG"), graphics.GraphicsDevice, Container.btnMenuGameSize);
             creditButton.SetPosition(Container.btnTacGiaPosition);
 
-            backButton = new cButton(Content.Load<Texture2D>("buttonBack"), graphics.GraphicsDevice, Container.btnBackSize);
+            backButton = new cButton(Content.Load<Texture2D>("buttonBack"), graphics.GraphicsDevice, Container.cButtonSize);
             backButton.SetPosition(Container.btnBackPosition);
 
 
-            tower1Button = new towerButton(Content.Load<Texture2D>("tower_000_build"), Content.Load<Texture2D>("tower1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower1Button.SetPosition(Container.btnTower1Position);
-            tower1Button.setPrice(Container.tower1Price);
-
-            tower2Button = new towerButton(Content.Load<Texture2D>("tower_001_build"), Content.Load<Texture2D>("tower2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower2Button.SetPosition(Container.btnTower2Position);
-            tower2Button.setPrice(Container.tower2Price);
-
-            tower3Button = new towerButton(Content.Load<Texture2D>("tower_002_build"), Content.Load<Texture2D>("tower3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower3Button.SetPosition(Container.btnTower3Position);
-            tower3Button.setPrice(Container.tower3Price);
-
-            tower4Button = new towerButton(Content.Load<Texture2D>("tower_003_build"), Content.Load<Texture2D>("tower4detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower4Button.SetPosition(Container.btnTower4Position);
-            tower4Button.setPrice(Container.tower4Price);
-
-            tower5Button = new towerButton(Content.Load<Texture2D>("tower_004_build"), Content.Load<Texture2D>("tower5detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower5Button.SetPosition(Container.btnTower5Position);
-            tower5Button.setPrice(Container.tower5Price);
-
-            tower6Button = new towerButton(Content.Load<Texture2D>("tower_005_build"), Content.Load<Texture2D>("tower6detail"), graphics.GraphicsDevice, Container.btnTowerSize);
-            tower6Button.SetPosition(Container.btnTower6Position);
-            tower6Button.setPrice(Container.tower6Price);
-
-            pauseButton = new cButton(Content.Load<Texture2D>("pause"), graphics.GraphicsDevice, Container.btnPauseSize);
+            pauseButton = new cButton(Content.Load<Texture2D>("pause"), graphics.GraphicsDevice, Container.cButtonSize);
             pauseButton.SetPosition(Container.btnPausePosition);
 
-            resumeButton = new cButton(Content.Load<Texture2D>("resume"), graphics.GraphicsDevice, Container.btnPauseSize);
+            resumeButton = new cButton(Content.Load<Texture2D>("resume"), graphics.GraphicsDevice, Container.cButtonSize);
             resumeButton.SetPosition(Container.btnResumePosition);
 
-            offMusicButton = new cButton(Content.Load<Texture2D>("turnOffMusic"), graphics.GraphicsDevice, Container.btnPauseSize);
+            offMusicButton = new cButton(Content.Load<Texture2D>("turnOffMusic"), graphics.GraphicsDevice, Container.cButtonSize);
             offMusicButton.SetPosition(Container.btnOffMusicPosition);
 
-            onMusicButton = new cButton(Content.Load<Texture2D>("turnOnMusic"), graphics.GraphicsDevice, Container.btnPauseSize);
+            onMusicButton = new cButton(Content.Load<Texture2D>("turnOnMusic"), graphics.GraphicsDevice, Container.cButtonSize);
             onMusicButton.SetPosition(Container.btnOnMusicPosition);
 
-            specialSkill1Button = new towerButton(Content.Load<Texture2D>("specialSkill1"), Content.Load<Texture2D>("special1detail"), graphics.GraphicsDevice, Container.btnTowerSize);
+            replayButton = new cButton(Content.Load<Texture2D>("replay"), graphics.GraphicsDevice, Container.cButtonSize);
+            replayButton.SetPosition(Container.btnReplayPosition);
+
+            nextWave = new cButton(Content.Load<Texture2D>("nextWave"), graphics.GraphicsDevice, Container.cButtonSize);
+            nextWave.SetPosition(Container.btnNextWavePosition);
+
+            specialSkill1Button = new cButton(Content.Load<Texture2D>("specialSkill1"), graphics.GraphicsDevice, Container.btnTowerSize);
             specialSkill1Button.SetPosition(Container.btnSpecialSkill1Button);
 
-            specialSkill2Button = new towerButton(Content.Load<Texture2D>("specialSkill2"), Content.Load<Texture2D>("special2detail"), graphics.GraphicsDevice, Container.btnTowerSize);
+            specialSkill2Button = new cButton(Content.Load<Texture2D>("skill2"), graphics.GraphicsDevice, Container.btnTowerSize);
             specialSkill2Button.SetPosition(Container.btnSpecialSkill2Button);
 
-            specialSkill3Button = new towerButton(Content.Load<Texture2D>("specialSkill3"), Content.Load<Texture2D>("special3detail"), graphics.GraphicsDevice, Container.btnTowerSize);
+            specialSkill3Button = new cButton(Content.Load<Texture2D>("skill3"), graphics.GraphicsDevice, Container.btnTowerSize);
             specialSkill3Button.SetPosition(Container.btnSpecialSkill3Button);
 
             mainMenuTexture = Content.Load<Texture2D>("MainMenu");
@@ -126,39 +119,72 @@ namespace TowerDefenseOOP
 
             pauseStateTexture = Content.Load<Texture2D>("pauseState");
 
-            playMenuTexture = Content.Load<Texture2D>("PlayMenu");
+            //Load các texture trong menu filed
+            menuField = Content.Load<Texture2D>("menuField");
+            infoBlock = Content.Load<Texture2D>("infoBlock");
+            towerBlock = Content.Load<Texture2D>("towerBlock");
+            skillBlock = Content.Load<Texture2D>("skillBlock");
+            //Load các tower texture
+            for(int i=0;i<6;i++)
+            {
+                string s="tower" +(i+1).ToString()+"detail";
+                towerButton tB= new towerButton(Content.Load<Texture2D>(i.ToString()), Content.Load<Texture2D>(s), graphics.GraphicsDevice, Container.btnTowerSize);
+                tB.SetPosition(Container.btnTowerPosList[i]);
+                tB.setPrice(Container.priceList[i]);
+                towerButtonList.Add(tB);
+            }
 
         }
-        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime,int wave)
+        /* Giá trị của retButton
+         0-tower1
+         ...
+         5-tower6
+         6-special1
+         ...
+         8-special3
+         9-pause
+         10-resume
+         11-onmusic
+         12-offmusic
+         13-nextwave
+         14-replay
+         -1-nothing
+         */
+        public void Update(Container.GameState CurrentState,MouseState mouse,int goldHave,GameTime gameTime)
         {
             GameState = CurrentState;
+            KeyboardState state = new KeyboardState();
+             state = Keyboard.GetState();
             if (Container.HP < 1)
                 GameState = Container.GameState.GameOver;
-            if (wave == Container.waveQuantity)
+            if (Game1.wave > Container.waveQuantity && Game1.enemyPerWave<=0)
                 GameState = Container.GameState.Win;
             switch (GameState)
             {
-                case Container.GameState.GameOver:
+                case Container.GameState.GameOver:          //Trường hợp thua
+                    Container.HP = 0;
                     backButton.Update(mouse);
-                    if (backButton.isClicked == true)
+                    if (backButton.isClicked == true)       //Chơi lại
                     {
                         GameState = Container.GameState.MainMenu;
-                        Container.HP = 10;
-                        wave = 0;
+                        Container.HP = 100;
+                        Game1.wave = 1;
                         goldHave = 400;
-                    }     
+                    }
                     break;
-                case Container.GameState.Win:
+
+                case Container.GameState.Win:           //Trường hợp thắng
                     backButton.Update(mouse);
-                    if (backButton.isClicked == true)
+                    if (backButton.isClicked == true)       //Chơi lại
                     {
                         GameState = Container.GameState.MainMenu;
-                        Container.HP = 10;
-                        wave = 0;
+                        Container.HP = 100;
+                        Game1.wave = 1;
                         goldHave = 400;
-                    }     
+                    }
                     break;
-                case Container.GameState.MainMenu:
+
+                case Container.GameState.MainMenu:          //Main menu
                     playButton.Update(mouse);
                     creditButton.Update(mouse);
                     introButton.Update(mouse);
@@ -177,152 +203,149 @@ namespace TowerDefenseOOP
                         GameState = Container.GameState.Intro;
                     }
                     break;
-                case Container.GameState.Intro:
-                    if (backButton.isClicked == true)
+
+                case Container.GameState.Intro:         //Giới thiệu
+                    if (backButton.isClicked == true || state.IsKeyDown(Keys.Escape))
                         GameState = Container.GameState.MainMenu;
                     backButton.Update(mouse);
                     break;
-                case Container.GameState.Tacgia:
-                    if (backButton.isClicked == true)
+
+                case Container.GameState.Tacgia:        //Tác giả
+                    if (backButton.isClicked == true || state.IsKeyDown(Keys.Escape))
                         GameState = Container.GameState.MainMenu;
                     backButton.Update(mouse);
                     break;
-                case Container.GameState.Playing:
+
+                case Container.GameState.Playing:       //Đang chơi
                     retButton = -1;
-                    if (pauseButton.isClicked == true)
+                    if (pauseButton.isClicked == true || state.IsKeyDown(Keys.Escape))  //Nếu nhấn nut pause hoặc escape
+                    {
+                        if (isPauseSet != true)
+                            retButton = 9;
+                        isPauseSet = !isPauseSet;
                         GameState = Container.GameState.Pausing;
-                    pauseButton.Update(mouse);
-                    if (resumeButton.isClicked == true)
-                        GameState = Container.GameState.Playing;
-                    resumeButton.Update(mouse);
-                    tower1Button.Update(mouse, goldHave);
-                    tower2Button.Update(mouse, goldHave);
-                    tower3Button.Update(mouse, goldHave);
-                    tower4Button.Update(mouse, goldHave);
-                    tower5Button.Update(mouse, goldHave);
-                    tower6Button.Update(mouse, goldHave);
-                    specialSkill1Button.Update(mouse, goldHave);
-                    specialSkill2Button.Update(mouse, goldHave);
-                    specialSkill3Button.Update(mouse, goldHave);
-                    if (tower1Button.isClicked == true) 
-                        RetButton = 0;
-                    if (tower2Button.isClicked == true)
-                        RetButton = 1;
-                    if (tower3Button.isClicked == true)
-                        RetButton = 2;
-                    if (tower4Button.isClicked == true)
-                        RetButton = 3;
-                    if (tower5Button.isClicked == true)
-                        RetButton = 4;
-                    if (tower6Button.isClicked == true)
-                        RetButton = 5;
-                    if (specialSkill1Button.isClicked == true)
-                        RetButton = 6;
-                    if (specialSkill2Button.isClicked == true)
-                        RetButton = 7;
-                    if (specialSkill3Button.isClicked == true)
-                        RetButton = 8;
-                    if (pauseButton.isClicked == true)
-                        RetButton = 9;
-                    if (resumeButton.isClicked == true)
-                        RetButton = 10;
-                    if (onMusicButton.isClicked == true)
-                        RetButton = 11;
-                    if (offMusicButton.isClicked == true)
-                        RetButton = 12;
+                        pauseButton.Update(mouse);
+                    }
+                    else
+                    {
+                        resumeButton.Update(mouse);
+
+                        foreach (towerButton tB in towerButtonList)
+                            tB.Update(mouse, goldHave);
+                        onMusicButton.Update(mouse);
+                        offMusicButton.Update(mouse);
+                        nextWave.Update(mouse);
+                        pauseButton.Update(mouse);
+                        replayButton.Update(mouse);
+                        specialSkill1Button.Update(mouse);
+                        specialSkill2Button.Update(mouse);
+                        specialSkill3Button.Update(mouse);
+
+                        if (onMusicButton.isClicked == true)
+                        {
+                            if (isSoundOn)
+                                retButton = 11;
+                            else
+                                retButton = 12;
+                            isSoundOn = !isSoundOn;
+                        }
+                        for (int i = 0; i < towerButtonList.Count;i++ )
+                        {
+                            if (towerButtonList[i].isClicked == true)
+                                retButton = i;
+                        }
+                        if (specialSkill1Button.isClicked == true)
+                            RetButton = 6;
+                        if (specialSkill2Button.isClicked == true)
+                            RetButton = 7;
+                        if (specialSkill3Button.isClicked == true)
+                            RetButton = 8;
+                        if (nextWave.isClicked==true)
+                            RetButton = 13;
+                        if (replayButton.isClicked==true)
+                            RetButton = 14;
+                    }
                     break;
-                    
+
+                case Container.GameState.Pausing:               //Trường hợp pause
+                    if (pauseButton.isClicked == true || state.IsKeyDown(Keys.Escape))
+                    {
+                        if(isPauseSet)
+                            RetButton = 10;
+                        isPauseSet = !isPauseSet;
+                        GameState = Container.GameState.Playing;
+                    }
+                    pauseButton.Update(mouse);
+                    replayButton.Update(mouse);
+                    break;
             }
-            base.Update(gameTime);
+             base.Update(gameTime);
         }
-        /*
-         0-tower1
-         ...
-         5-tower6
-         6-special1
-         ...
-         8-special3
-         9-pause
-         10-resume
-         11-onmusic
-         12-offmusic
-         -1 - nothing
-         */
 
         public void Draw(SpriteBatch spriteBatch,Container.GameState GameState)
         {
 
             switch (GameState)
             {
+                #region GameState = MainMenu
                 case Container.GameState.MainMenu:
                 spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
                 playButton.Draw(spriteBatch);
                 introButton.Draw(spriteBatch);
                 creditButton.Draw(spriteBatch);
                 break;
+                #endregion
+
+                #region    GameState = Intro
                 case Container.GameState.Intro:
                 spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
                 spriteBatch.Draw(huongDanTexture, new Rectangle(200, 50, 800, 600), Color.White);
                 backButton.Draw(spriteBatch);
                 break;
+                #endregion
+
+                #region GameState = TacGia
                 case Container.GameState.Tacgia:
                 spriteBatch.Draw(mainMenuTexture, new Rectangle(0, 0, Container.scrWidth, Container.scrHeight), Color.White);
                 spriteBatch.Draw(tacGiaTexture, new Rectangle(0, 0, tacGiaTexture.Width, tacGiaTexture.Height), Color.White);
                 backButton.Draw(spriteBatch);
-
                 break;
+                #endregion
+
+                #region GameState = Pausing || Playing || Win  || GameOver
                 case Container.GameState.Pausing:
-                spriteBatch.Draw(playMenuTexture, Container.playMenuPosition, Color.White);
-                spriteBatch.Draw(pauseStateTexture, new Rectangle(100, 50, 800, 600), Color.White);
-                tower1Button.Draw(spriteBatch);
-                tower2Button.Draw(spriteBatch);
-                tower3Button.Draw(spriteBatch);
-                tower4Button.Draw(spriteBatch);
-                tower5Button.Draw(spriteBatch);
-                tower6Button.Draw(spriteBatch);
-
-                onMusicButton.Draw(spriteBatch);
-                resumeButton.Draw(spriteBatch);
-                specialSkill1Button.Draw(spriteBatch);
-                specialSkill2Button.Draw(spriteBatch);
-                specialSkill3Button.Draw(spriteBatch);
-                break;
-                case Container.GameState.Win:
-                // ve them 1 cai Win
-   
-                backButton.Draw(spriteBatch);
-                    
-                break;
-                case Container.GameState.GameOver:
-                //ve them 1 cai game over
-                backButton.Draw(spriteBatch);
-
-                break;
                 case Container.GameState.Playing:
-
-                    spriteBatch.Draw(playMenuTexture, Container.playMenuPosition, Color.White);
-                   
-                    //animation.Draw(spriteBatch);
+                case Container.GameState.Win:
+                case Container.GameState.GameOver:
+                    //Vẽ menu field
+                    spriteBatch.Draw(menuField, Container.playMenuPosition, Color.White*0.1f);
+                    spriteBatch.Draw(infoBlock, Container.infoBlock, Color.White*0.3f);
+                    spriteBatch.Draw(towerBlock, Container.towerBlock, Color.White * 0.3f);
+                    spriteBatch.Draw(skillBlock, Container.skillBlock, Color.White * 0.3f);
                     // Cac ban ve trong playing thi Update o day
                     //<Start>
-                    
-                    tower1Button.Draw(spriteBatch);
-                    tower2Button.Draw(spriteBatch);
-                    tower3Button.Draw(spriteBatch);
-                    tower4Button.Draw(spriteBatch);
-                    tower5Button.Draw(spriteBatch);
-                    tower6Button.Draw(spriteBatch);
-                    onMusicButton.Draw(spriteBatch);
-                    pauseButton.Draw(spriteBatch);
+                    //Vẽ các towerButton
+                    foreach (towerButton item in towerButtonList)
+                    {
+                        item.Draw(spriteBatch);
+                    }
+                    if (!isSoundOn)
+                        onMusicButton.Draw(spriteBatch);
+                    else
+                        offMusicButton.Draw(spriteBatch);
+                    if (!isPauseSet)
+                        pauseButton.Draw(spriteBatch);
+                    else
+                        resumeButton.Draw(spriteBatch);
+                    replayButton.Draw(spriteBatch);
+                    nextWave.Draw(spriteBatch);
                     specialSkill1Button.Draw(spriteBatch);
                     specialSkill2Button.Draw(spriteBatch);
                     specialSkill3Button.Draw(spriteBatch);
-
                     //<End>
                     break;
+                #endregion
             }
-            
-            
         }
     }
 }

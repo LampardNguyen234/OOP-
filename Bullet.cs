@@ -18,6 +18,13 @@ namespace TowerDefenseOOP
         Vector2 center;
         public Enemy target;
 
+        private Rectangle boundingBox;
+
+        public Rectangle BoundingBox
+        {
+            get { return boundingBox; }
+        }
+
         public Vector2 Center
         {
             get { return center; }
@@ -45,8 +52,9 @@ namespace TowerDefenseOOP
         {
             texture = bulletTexture;
             this.position = position;
+            boundingBox = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
             this.level = level;
-            this.speed = 3;
+            this.speed = 5;
             rotation = 0;
             age = 0;
             velocity = new Vector2(0, 0);
@@ -88,10 +96,8 @@ namespace TowerDefenseOOP
         {
             if (target == null)
                 return false;
-            Vector2 distance = Center - target.Center;
-            if (Math.Abs(distance.Y) <= Container.enemyTextureSize * Container.enemyTextureScale / 2)
-                if (Math.Abs(distance.X) <= Container.enemyTextureSize * Container.enemyTextureScale / 2)
-                    return true;
+            if (boundingBox.Intersects(target.BoundingBox))
+                return true;
             return false;
         }
 
@@ -100,6 +106,7 @@ namespace TowerDefenseOOP
         {
             position += velocity;
             center = position + new Vector2(texture.Width / 2, texture.Height / 2);
+            boundingBox = new Rectangle((int)center.X, (int)center.Y, texture.Width, texture.Height);
             origin = new Vector2(0, 0);
         }
 
@@ -107,7 +114,7 @@ namespace TowerDefenseOOP
         {
             if (!IsDead())
             {
-                spriteBatch.Draw(texture, center, null, Color.White*2f, rotation, origin, 0.5f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, boundingBox, null, Color.White, rotation, origin, SpriteEffects.None, 0f);
             }
             else
                 return;

@@ -26,6 +26,7 @@ namespace TowerDefenseOOP
         float scale;
         public static int buildTower;
         private int tempBuildTower;
+        bool isTowerAvailable;
         public int Level
         {
             get { return this.level; }
@@ -49,6 +50,8 @@ namespace TowerDefenseOOP
             buildTower = -1;
             tempBuildTower = -1;
             isBuildingTower = false;
+            Mouse.SetPosition(0, 0);
+            isTowerAvailable = false;
         }
 
 
@@ -108,23 +111,110 @@ namespace TowerDefenseOOP
             addToMap();
         }
 
+        //Kiểm tra xem vị trí có xây được tower không
+        public bool checkTowerAvailable(Vector2 position, List<ackackTower> ackackTowerList, List<DualMachineGunTower> dualMachineTowerList,
+        List<MachineGunTower> machineGunTowerList, List<LazerTower> lazeTowerList, List<RocketTower> rocketTowerList, List<EnhancingTower> enhancingTowerList)
+        {
+            int width = Container.MapWidth;
+            int height = Container.MapHeight;
+            if (position.X > 870) return false;
+            foreach (Vector2 roadCenter in roadCenters)
+            {
+                if (Vector2.Distance(position, roadCenter) < (float)Container.tileSize * Container.enemyTextureScale*0.75)
+                    return false;
+            }
+            foreach (Vector2 rockCenter in rockCenters)
+            {
+                if (Vector2.Distance(position, rockCenter) < (float)Container.towerSize * 2)
+                    return false;
+            }
+            foreach (ackackTower a in ackackTowerList)
+            {
+                if (Vector2.Distance(position, a.Position) < Container.towerSize)
+                    a.Hover = true;
+                else
+                    a.Hover = false;
+                if (Vector2.Distance(position, a.Position) < (float)Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            foreach (DualMachineGunTower d in dualMachineTowerList)
+            {
+                if (Vector2.Distance(position, d.Position) < Container.towerSize)
+                    d.Hover = true;
+                else
+                    d.Hover = false;
+                if (Vector2.Distance(position, d.Position) < (float)Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            foreach (MachineGunTower m in machineGunTowerList)
+            {
+                if (Vector2.Distance(position, m.Position) < Container.towerSize)
+                    m.Hover = true;
+                else
+                    m.Hover = false;
+                if (Vector2.Distance(position, m.Position) < (float)Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            foreach (LazerTower l in lazeTowerList)
+            {
+                if (Vector2.Distance(position, l.Position) < Container.towerSize)
+                    l.Hover = true;
+                else
+                    l.Hover = false;
+                if (Vector2.Distance(position, l.Position) < Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            foreach (RocketTower r in rocketTowerList)
+            {
+                if (Vector2.Distance(position, r.Position) < Container.towerSize)
+                    r.Hover = true;
+                else
+                    r.Hover = false;
+                if (Vector2.Distance(position, r.Position) < (float)Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            foreach (EnhancingTower e in enhancingTowerList)
+            {
+                if (Vector2.Distance(position, e.Position) < Container.towerSize)
+                    e.Hover = true;
+                else
+                    e.Hover = false;
+                if (Vector2.Distance(position, e.Position) < (float)Container.towerSize * Container.enemyTextureScale)
+                    return false;
+            }
+            return true;
+        }
 
         //Update
-        public void Update(GameTime gameTime, int retButton)
+        public void Update(GameTime gameTime, int retButton, List<ackackTower> ackackTowerList, List<DualMachineGunTower> dualMachineTowerList,
+         List<MachineGunTower> machineGunTowerList, List<LazerTower> lazeTowerList, List<RocketTower> rocketTowerList, List<EnhancingTower> enhancingTowerList)
         {
             mouseState = Mouse.GetState();
             position = new Vector2(mouseState.X, mouseState.Y);
             buildTower = -1;
 
+            if (checkTowerAvailable(position, ackackTowerList, dualMachineTowerList, machineGunTowerList, lazeTowerList, rocketTowerList, enhancingTowerList))
+                isTowerAvailable = true;
+            else
+                isTowerAvailable = false;
             //Hàm lấy giá trị và trạng thái chọn tháp để mang vào map xây
             if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && position.X > 900 && retButton!=-1)
             {
                 tempBuildTower = retButton;//Giá trị trả về từ hàm isClick() trong Menu
-                isBuildingTower = true;
+                if (retButton >= 0 && retButton < 6)     //Kiểm tra trường hợp các button là các tháp
+                {
+                    if (CheckBuildingAvailable(Container.priceList[retButton]))
+                        isBuildingTower = true;
+                    else
+                        isBuildingTower = false;
+                }
+                else
+                    isBuildingTower = true;
             }
 
-            //RightClick để hủy việc đang chọn Tower
-            if (mouseState.RightButton == ButtonState.Released && oldState.RightButton == ButtonState.Pressed && isBuildingTower)
+            //RightClick hoặc nhấn ESC để hủy việc đang chọn Tower
+            KeyboardState state = Keyboard.GetState();
+            if (mouseState.RightButton == ButtonState.Released && oldState.RightButton == ButtonState.Pressed && isBuildingTower || state.IsKeyDown(Keys.Escape))
             {
                 isBuildingTower = false;
                 tempBuildTower = -1;
@@ -134,7 +224,7 @@ namespace TowerDefenseOOP
             //Check vị trí của Tower
             if (mouseState.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed && isBuildingTower)
             {
-                if (checkTowerAvailable(position))
+                if (isTowerAvailable)
                 {
                     buildTower = tempBuildTower;
                     tempBuildTower = -1;
@@ -144,21 +234,32 @@ namespace TowerDefenseOOP
             oldState = mouseState;
         }
 
-
+        //Kiểm tra xem còn đủ tiền đề mua không
+        public bool CheckBuildingAvailable(int price)
+        {
+            if (price > Game1.goldHave)
+                return false;
+            return true;
+        }
         //Hàm vẽ
         public void Draw(SpriteBatch spriteBatch)
         {
             Color color;
-            if (checkTowerAvailable(position))
+            if (isTowerAvailable)
                 color = Color.White;
             else
                 color = Color.Red;
             if (isBuildingTower)
             {
-                spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
-                if (tempBuildTower != -1)
-                    spriteBatch.Draw(towerTextureList[tempBuildTower], position, null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), (float)Container.towerSize / (float)mouseTexture.Width, SpriteEffects.None, 0f);
+                if (tempBuildTower != -1 && tempBuildTower < 6)
+                {
+                    spriteBatch.Draw(mouseTexture, position, null, color, 0f, origin, scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(towerTextureList[tempBuildTower], position, new Rectangle(0,0,Container.towerSize,Container.towerSize), color, 0f, origin, scale, SpriteEffects.None, 0f);
+                    //Vẽ đúng bán kính của từng Tower
+                    float radiusScale;
+                    radiusScale = 2 * (float)Container.radiusList[tempBuildTower] / (float)radiusTexture.Width;
+                    spriteBatch.Draw(radiusTexture, position, null, Color.Green * 0.2f, 0f, new Vector2(224 / 2, 224 / 2), radiusScale, SpriteEffects.None, 0f);
+                }
             }
         }
     }

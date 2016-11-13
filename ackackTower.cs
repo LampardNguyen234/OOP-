@@ -16,12 +16,12 @@ namespace TowerDefenseOOP
         public ackackTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
-            radius = 100f;
-            attack = 7;
-            price = 250;
+            radius = Container.radiusList[0];
+            attack = Container.attackList[0];
+            price = Container.priceList[0];
             smallestRange = radius;
-            timer = 300f;
-            interval = 300f;
+            timer = 500f;
+            interval = 500f;
         }
 
         //Update

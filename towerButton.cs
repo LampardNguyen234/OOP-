@@ -11,7 +11,7 @@ namespace TowerDefenseOOP
 {
     class towerButton
     {
-        public static int Price;
+        public int Price;
         Texture2D texture;
         Vector2 position, origin;
         Rectangle rectangle;
@@ -34,7 +34,6 @@ namespace TowerDefenseOOP
             rectangle = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
             Rectangle mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
        
-
             if (mouseRectangle.Intersects(rectangle))
             {
                 if (mouse.LeftButton == ButtonState.Pressed) isClicked = true;
@@ -42,8 +41,7 @@ namespace TowerDefenseOOP
                
             }
             else
-            {
-                
+            {   
                 isClicked = false;
                 hover = false;
             }
@@ -54,10 +52,33 @@ namespace TowerDefenseOOP
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Game1.baseButton, position, null, colour, 0, origin, 0.7f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, position, null,colour,0,origin,1f,SpriteEffects.None,0f);
-            //if (hover)
-            //    spriteBatch.Draw(buttondetail,new Rectangle((int)position.X-30,(int)position.Y-30,100,150), new Rectangle(0, 0, 130, 170), Color.White);
+            float transparentRate =1;
+            if (Price > Game1.goldHave) //Kiểm tra xem có mua được tower không
+                transparentRate = 0.7f;
+            if (hover)                  //Nếu hover chuột vào tower
+            {
+                if (Price < Game1.goldHave && Price != 600)
+                {
+                    spriteBatch.Draw(Game1.baseButton, position, null, colour * transparentRate, 0, origin, 0.8f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, position, null, colour * transparentRate, 0, origin, 1.3f, SpriteEffects.None, 0f);
+                }
+                else if(Price>Game1.goldHave && Price!=600)
+                {
+                    spriteBatch.Draw(Game1.baseButton, position, null, colour * transparentRate, 0, origin, 0.8f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, position, null, colour * transparentRate, 0, origin, 1.3f, SpriteEffects.None, 0f);
+                }
+                else
+                {
+                    spriteBatch.Draw(Game1.baseButton, position, null, colour * transparentRate, 0, origin, 0.8f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, position, null, colour * transparentRate, 0, origin, 1f, SpriteEffects.None, 0f);
+                }
+                spriteBatch.Draw(buttondetail, Container.towerDetailPosition, null, colour, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                spriteBatch.Draw(Game1.baseButton, position, null, colour * transparentRate*0.5f, 0, origin, 0.8f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, position, null, colour * transparentRate, 0, origin, 1f, SpriteEffects.None, 0f);
+            }
         }
         public void setPrice(int price)
         {

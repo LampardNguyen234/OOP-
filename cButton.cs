@@ -9,12 +9,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TowerDefenseOOP
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class cButton
     {
         Texture2D texture;
         Vector2 position;
         Rectangle rectangle;
-
+        MouseState oldMouseState;
         Color colour = new Color(255, 255, 255, 255);
         public Vector2 size;
         public cButton(Texture2D newTexture, GraphicsDevice graphics, Vector2 tempSize)
@@ -35,15 +38,19 @@ namespace TowerDefenseOOP
                 if (colour.A == 255) down = false;
                 if (colour.A == 0) down = true;
                 if (down) colour.A += 3; else colour.A -= 3;
-                if (mouse.LeftButton == ButtonState.Pressed) 
+                if (mouse.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed)
                     isClicked = true;
+                else
+                    isClicked = false;
 
             }
-            else if (colour.A < 255)
+            else 
             {
-                colour.A += 3;
+                if (colour.A < 255)
+                    colour.A += 3;
                 isClicked = false;
             }
+            oldMouseState = mouse;
         }
         public void SetPosition(Vector2 newPosition)
         {

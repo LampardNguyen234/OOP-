@@ -50,10 +50,90 @@ with.
     character set. The characters are ordered according to the Unicode standard.
     See the documentation for more information.
     -->
-    <CharacterRegions>
+  <CharacterRegions>
       <CharacterRegion>
         <Start>&#32;</Start>
         <End>&#126;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#192;</Start>
+        <End>&#195;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&amp;</Start>
+        <End>&#202;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#204;</Start>
+        <End>&#205;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#210;</Start>
+        <End>&#213;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#217;</Start>
+        <End>&#218;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#221;</Start>
+        <End>&#221;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#224;</Start>
+        <End>&#227;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#232;</Start>
+        <End>&#234;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#236;</Start>
+        <End>&#237;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#242;</Start>
+        <End>&#245;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#249;</Start>
+        <End>&#250;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#253;</Start>
+        <End>&#253;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#258;</Start>
+        <End>&#259;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#272;</Start>
+        <End>&#273;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#296;</Start>
+        <End>&#297;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#360;</Start>
+        <End>&#361;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#416;</Start>
+        <End>&#417;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#431;</Start>
+        <End>&#432;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#7840;</Start>
+        <End>&#7924;</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>&#7926;</Start>
+        <End>&#7929;</End>
       </CharacterRegion>
     </CharacterRegions>
   </Asset>

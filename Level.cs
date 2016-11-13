@@ -57,8 +57,11 @@ namespace TowerDefenseOOP
         #endregion
 
         #region     Tạo waypoints
-        public void LoadWayPoint(int k)
+        public void LoadWayPoint(int k, bool isNavy)
         {
+            int index = 1;
+            if (isNavy)     //Nếu là đường đi dưới nước
+                index = 3;
             while (wayPoints.Count > 0)
                 wayPoints.Dequeue();
             Random rand = new Random();                     // tạo số ngẫu nhiên
@@ -67,7 +70,7 @@ namespace TowerDefenseOOP
             #region Danh sách các điểm bắt đầu
             for (int x = 0; x < Width; x++)
             {
-                if (map[0, x] == 1)
+                if (map[0, x] == index)
                 {
                     Vector2 beginningPoint = new Vector2(x, 0) * Container.roadSize;
                     beginningList.Add(beginningPoint);
@@ -75,107 +78,130 @@ namespace TowerDefenseOOP
             }
             for (int y = 0; y < Height; y++)
             {
-                if (map[y, 0] == 1)
+                if (map[y, 0] == index)
                     beginningList.Add(new Vector2(0, y) * Container.roadSize);
             }
             int m = rand.Next(0, beginningList.Count);
-            if (m == 1)
-                m = 1;
             way.Push(beginningList[m]);
             #endregion
+
+            #region Tạo waypoint
             for (int y = 1; y < Height; y++)
             {
                 for (int x = 1; x < Width; x++)
                 {
-                    if (map[y, x] == 1 && !isContained(way, y, x))
+                    if (map[y, x] == index && !isContained(way, y, x))
                     {
-                        if (y == 0 || x < 1 || x == Width - 1)
+                        Vector2 tempPos = way.Peek() / Container.roadSize;
+                        if (y == Height - 1 || x == Width - 1)       //Trường hợp các điểm nằm ở biên phải và dưới
                         {
-                            if ((int)(way.Peek().Y / Container.roadSize) != Height - 1)
+                            if ((int)tempPos.Y == y - 1 && (int)tempPos.X == x)
+                            {
                                 way.Push(new Vector2(x, y) * Container.roadSize);
+                                x = Width - 1;
+                                continue;
+                            }
+                            if ((int)tempPos.Y == y && (int)tempPos.X == x - 1)
+                            {
+                                way.Push(new Vector2(x, y) * Container.roadSize);
+                                y = Height - 1;
+                                continue;
+                            }
                         }
                         else
                         {
-                            Vector2 tempPos = way.Peek() / Container.roadSize;
-                            #region Đường đi nằm ở hàng cuối cùng
-                            if (y == Height - 1)
+                            #region Đi từ trên xuống
+                            if ((int)tempPos.Y == y - 1 && (int)tempPos.X == x)
                             {
-                                if ((y == (int)tempPos.Y && x - 1 == (int)tempPos.X) ||
-                                     (y - 1 == (int)tempPos.Y && x == (int)tempPos.X))
+                                //Đi thẳng xuống hoặc rẽ phải
+                                if (map[y + 1, x] == index && map[y, x + 1] == index)
+                                {
+                                    int i = rand.Next(0, 20);
+                                    if (i + k < 20)     //Chọn rẽ phải
+                                    {
+                                        way.Push(new Vector2(x, y) * Container.roadSize);
+                                        way.Push(new Vector2(x + 1, y) * Container.roadSize);
+                                        continue;
+                                    }
+                                    else                //Chọn đi thẳng xuống
+                                    {
+                                        way.Push(new Vector2(x, y) * Container.roadSize);
+                                        way.Push(new Vector2(x, y + 1) * Container.roadSize);
+                                        y++; x = 0;
+                                        continue;
+                                    }
+                                }
+                                //Chỉ có thể đi rẽ trái
+                                if (map[y + 1, x] != index && map[y, x + 1] != index && map[y, x - 1] == index)
                                 {
                                     way.Push(new Vector2(x, y) * Container.roadSize);
+                                    way.Push(new Vector2(x - 1, y) * Container.roadSize);
+                                    x = 0;
                                     continue;
                                 }
+                                way.Push(new Vector2(x, y) * Container.roadSize);
+                                continue;
                             }
                             #endregion
+
                             #region Đi từ trái sang phải
-                            if (y == (int)tempPos.Y && x - 1 == (int)tempPos.X)
+                            if ((int)tempPos.Y == y && (int)tempPos.X == x - 1)
                             {
-                                #region Trường hợp có thể đi qua phải hay đi xuống
-                                if (map[y + 1, x] == 1 && map[y, x + 1] == 1)
+                                //Có thể đi thẳng hoặc đi xuống
+                                if (map[y + 1, x] == index && map[y, x + 1] == index)
                                 {
                                     int i = rand.Next(0, 20);
-                                    if (k + i < 20)
+                                    if (k + i < 20)         //Chọn đi thẳng sang phải
                                     {
                                         way.Push(new Vector2(x, y) * Container.roadSize);
                                         way.Push(new Vector2(x + 1, y) * Container.roadSize);
                                         continue;
                                     }
-                                    else
+                                    else                    //Chọn rẽ xuống
                                     {
                                         way.Push(new Vector2(x, y) * Container.roadSize);
                                         way.Push(new Vector2(x, y + 1) * Container.roadSize);
+                                        y = y + 1; x = 0;
                                         continue;
                                     }
                                 }
-                                #endregion
-
+                                //Chỉ có thể rẽ lên
+                                if (map[y + 1, x] != index && map[y, x + 1] != index && map[y - 1, x] == index)
+                                {
+                                    way.Push(new Vector2(x, y) * Container.roadSize);
+                                    way.Push(new Vector2(x, y - 1) * Container.roadSize);
+                                    y = 0; x = 0;
+                                    continue;
+                                }
                                 way.Push(new Vector2(x, y) * Container.roadSize);
                                 continue;
                             }
                             #endregion
-                            #region Đi từ trên xuống
-                            if (y - 1 == (int)tempPos.Y && x == (int)tempPos.X)
+
+                            #region Đi từ phải sang trái
+                            if ((int)tempPos.Y == y && (int)tempPos.X == x + 1)
                             {
-                                #region Có thể đi thẳng xuống hoặc đi qua phải
-                                if (map[y + 1, x] == 1 && 1 == map[y, x + 1])
-                                {
-                                    int i = rand.Next(0, 20);
-                                    if (i + k < 20)
-                                    {
-                                        way.Push(new Vector2(x, y) * Container.roadSize);
-                                        way.Push(new Vector2(x + 1, y) * Container.roadSize);
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        way.Push(new Vector2(x, y) * Container.roadSize);
-                                        way.Push(new Vector2(x, y + 1) * Container.roadSize);
-                                        continue;
-                                    }
-                                }
-                                #endregion
-
-                                #region Có thể đi thẳng xuống
-                                if (y < Height - 2)
-                                {
-                                    if (map[y + 1, x - 1] == 1 && map[y + 1, x] == 1 && map[y + 2, x] == 1)
-                                    {
-                                        way.Push(new Vector2(x, y) * Container.roadSize);
-                                        way.Push(new Vector2(x, y + 1) * Container.roadSize);
-                                        way.Push(new Vector2(x, y + 2) * Container.roadSize);
-                                        continue;
-                                    }
-                                }
-                                #endregion
-                            #endregion
                                 way.Push(new Vector2(x, y) * Container.roadSize);
+                                x = 0;
                                 continue;
                             }
+                            #endregion
+
+                            #region Đi từ dưới lên trên
+                            if ((int)tempPos.Y == y + 1 && (int)tempPos.X == x)
+                            {
+                                way.Push(new Vector2(x, y) * Container.roadSize);
+                                y = 1; x = 0;
+                                continue;
+                            }
+
+                            #endregion
                         }
                     }
                 }
             }
+            #endregion
+
             Stack<Vector2> temp = new Stack<Vector2>();
             while (way.Count > 0)
             {
@@ -184,6 +210,7 @@ namespace TowerDefenseOOP
             while (temp.Count > 0)
                 WayPoints.Enqueue(temp.Pop());
         }
+        
         #endregion
 
 
@@ -225,16 +252,17 @@ namespace TowerDefenseOOP
             {
                 if (k < 10)
                 {
-                    string sTile = "tile_" + (level+2).ToString("d2") + "_" + k.ToString("d2");
+                    string sTile = "tile_" + (level - 2).ToString("d2") + "_" + k.ToString("d2");   //Cần sửa ở đây
                     Texture2D tile = Content.Load<Texture2D>(sTile);
                     tileTextureList.Add(tile);
                 }
-                    string sRoad = "road_" + (level+2).ToString("d2") + "_" + k.ToString("d2");  
-                    Texture2D road = Content.Load<Texture2D>(sRoad);
-                    roadTextureList.Add(road);
-                
+                string sRoad = "road_" + (level - 2).ToString("d2") + "_" + k.ToString("d2");       //Đây cũng vậy
+                Texture2D road = Content.Load<Texture2D>(sRoad);
+                roadTextureList.Add(road);
+
             }
-            background = Content.Load<Texture2D>("map1");
+            string s = "map" + level.ToString();
+            background = Content.Load<Texture2D>(s);
                 
         }
 
@@ -340,37 +368,37 @@ namespace TowerDefenseOOP
         //Hàm vẽ map
         public void Draw(SpriteBatch spriteBatch)
         {
-           // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+            // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             Color color = Color.Tan;
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    Vector2 origin =new Vector2(0,0);
+                    Vector2 origin = new Vector2(0, 0);
                     Texture2D texture = null;
-                        position.X = x * Container.tileSize;
-                        position.Y = y * Container.tileSize;
+                    position.X = x * Container.tileSize;
+                    position.Y = y * Container.tileSize;
+                    texture = roadTextureList[0];
+                    spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
+                    int k = CheckRoad(y, x);
+                    if (k < 0)
+                    {
                         texture = roadTextureList[0];
                         spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
-                        int k = CheckRoad(y, x);
-                        if (k < 0)
-                        {
-                            texture = roadTextureList[0];
-                            spriteBatch.Draw(texture, position,null, color,0f,origin,(float)Container.tileSize/(float)texture.Width,SpriteEffects.None,0f);
-                            texture = tileTextureList[-1 - k];
-                            spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
-                        }
-                        else
-                        {
-                            texture = tileTextureList[0];
-                            spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
-                            texture = roadTextureList[k];
-                            spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
-                        }
-                    
+                        texture = tileTextureList[-1 - k];
+                        spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
+                    }
+                    else
+                    {
+                        texture = tileTextureList[0];
+                        spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
+                        texture = roadTextureList[k];
+                        spriteBatch.Draw(texture, position, null, color, 0f, origin, (float)Container.tileSize / (float)texture.Width, SpriteEffects.None, 0f);
+                    }
+
                 }
             }
-           // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+            // spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
         }
     }
 }

@@ -21,7 +21,13 @@ namespace TowerDefenseOOP
             set { center = value; }
         }
         private Vector2 origin;
+        private Rectangle sourceTexture;
         private Rectangle boundingBox;
+
+        public Rectangle BoundingBox
+        {
+            get { return boundingBox; }
+        }
         private Rectangle healthBarRect;//Thanh hiển thị máu
 
         private float rotation;         //góc quay, dùng khi vẽ
@@ -52,16 +58,24 @@ namespace TowerDefenseOOP
 
         public bool isWayPointsSet;     //Kiểm tra xem waypoint đã được set hay chưa
 
-        private Texture2D texture;
+        public bool isLockedByRocket;   //Kiểm tra xem đã bị bệ phóng tên lửa khóa mục tiêu hay chưa
+
+        public bool isNavy;
+
+        private Texture2D texture;      //Hình ảnh của enemy
 
         public Texture2D Texture
         {
             get { return texture; }
             set { texture = value; }
         }
-        private Texture2D healthBarTexture;
+        private Texture2D healthBarTexture;     //Khung hình thể hiện máu
 
         private Queue<Vector2> wayPoints = new Queue<Vector2>();    //Đường đi của enemy
+
+        public Queue<Vector2> WayPoints
+        { get { return wayPoints; } }
+
         private Queue<Vector2> copywayPoints = new Queue<Vector2>();
         private Texture2D healthBar;
         private float scale;        //Tỉ lệ hình ảnh in ra
@@ -81,21 +95,38 @@ namespace TowerDefenseOOP
             position = new Vector2(0, 0);
             center = new Vector2(0, 0);
             origin = new Vector2(Container.enemyTextureSize / 2);
-            attack = 5 * level;
-            startingHP = Container.enemyStartingHP;
-            currentHP = startingHP;
-            bountyGiven = 25 * level;
+            attack = 2 * level;
+            bountyGiven = 10 * level;
             frameX = 0;
             frameY = 0;
-            speed = 1f+ Container.basicEnemySpeed * (float)level/Container.numberOfEnemies;
             textureInterval = 200f;
             timer = 0;
             enemyTextureWidth = texture.Width / Container.enemyTextureSize;
             enemyTextureHeight= texture.Height / Container.enemyTextureSize;
             healthPercent = (float)currentHP / (float)startingHP;
             healthBarRect = new Rectangle(((int)center.X + Container.healthBarWidth/2), (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
-            boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
+            sourceTexture = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
+            boundingBox = new Rectangle((int)position.X, (int)position.Y, Container.enemyTextureSize, Container.enemyTextureSize);
             isWayPointsSet = false;
+            if (level == 1 || level==2)
+                speed = 0.8f;
+            if (level == 3)
+                speed =1.2f;
+            if (level == 5 || level == 4)
+                speed = 0.6f;
+            if (level == 6)
+                speed = 2f;
+            if (level == 7)
+                speed = 2.2f;
+            //Máu
+            startingHP = Container.enemyStartingHP*level;
+            currentHP = startingHP;
+
+            if (level < 7)
+                isNavy = false;
+            else
+                isNavy = true;
+            isLockedByRocket = false;
         }
 
 
@@ -152,9 +183,9 @@ namespace TowerDefenseOOP
                     position += velocity;
                 }
             }
-            else
+            else            //Trường hợp đã đi hết waypoint
             {
-                if (rotation >= 0)
+                if (rotation >=-Container.PI/4)      //Nếu 
                     if (position.Y < Container.MapHeight * Container.tileSize)
                         position.Y += speed;
                     else
@@ -220,7 +251,7 @@ namespace TowerDefenseOOP
                         return -1;   //Rẽ phải
                     return 1;      //Rẽ trái
                 }
-                int X3 = (int)(position.X + Container.tileSize - 1) / 60;
+                int X3 = (int)(position.X + Container.tileSize -1 ) / 60;
                 //Đi từ phải sang trái
                 if (Y1 == Y && X1 < X3)
                 {
@@ -230,7 +261,7 @@ namespace TowerDefenseOOP
                         return -1;
                     return 1;       //Đi lên
                 }
-                int Y3 = (int)(position.Y - Container.tileSize - 1) / 60;
+                int Y3 = (int)(position.Y +Container.tileSize -1 ) / 60;
                 //Đi từ dưới lên
                 if (X1 == X && Y1 < Y3)
                 {
@@ -258,10 +289,6 @@ namespace TowerDefenseOOP
             float rotationAdd = 0;
             float a = (float)(speed / 1.3);
 
-            if (k == 0)
-            {
-                rotationAdd = 0f;
-            }
             if (k == 1)
             {
                 rotationAdd = ((float)a / 90) * Container.PI;
@@ -269,6 +296,11 @@ namespace TowerDefenseOOP
             if (k == -1)
             {
                 rotationAdd = -((float)a / 90) * Container.PI;
+            }
+
+            if (k == 0)
+            {
+                rotationAdd = 0f;
             }
             rotation += rotationAdd;
         }
@@ -310,18 +342,25 @@ namespace TowerDefenseOOP
             //Tính toán máu
             healthPercent = (float)currentHP / (float)startingHP;
             //Chuyển frame texture của enemy
-            boundingBox = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
+            sourceTexture = new Rectangle(frameX * Container.enemyTextureSize, frameY * Container.enemyTextureSize, Container.enemyTextureSize, Container.enemyTextureSize);
             //Di chuyển enemy
             move();
             //Update center và origin
             center = new Vector2(position.X + Container.tileSize / 2, position.Y + Container.tileSize / 2);
+            boundingBox = new Rectangle((int)center.X, (int)center.Y, Container.enemyTextureSize, Container.enemyTextureSize);
             origin = new Vector2(Container.enemyTextureSize / 2, Container.enemyTextureSize / 2);
             //Cập nhật trạng thái và vị trí thanh máu
             healthBarRect = new Rectangle((int)center.X - Container.healthBarWidth/2, (int)center.Y, (int)(Container.healthBarWidth * healthPercent), Container.healthBarHeight);
             //Tính toán góc quay của texture enemy
             calculateRotationAngle();
-            if (!isAlive && wayPoints.Count != 0)
-                Game1.sm.explodeSound.Play();
+            if (!isAlive)
+                if (wayPoints.Count != 0)
+                {
+                    Game1.goldHave += bountyGiven;
+                    Game1.sm.explodeSound.Play();
+                }
+                else
+                    Container.HP -= attack;
         }
 
         //Hàm Draw
@@ -330,10 +369,11 @@ namespace TowerDefenseOOP
             if (isAlive)
             {
                 //Vẽ enemy
-                spriteBatch.Draw(texture, center, boundingBox, Color.White, rotation, origin, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, center, sourceTexture, Color.White, rotation, origin, scale, SpriteEffects.None, 0f);
                 //Vẽ thanh máu
-                spriteBatch.Draw(healthBarTexture, healthBarRect, Color.Violet);
+                spriteBatch.Draw(healthBarTexture, healthBarRect, Color.Red);
             }
+
         }
     }
 }

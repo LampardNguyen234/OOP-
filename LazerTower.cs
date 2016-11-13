@@ -16,11 +16,11 @@ namespace TowerDefenseOOP
         public LazerTower(Texture2D texture, int level, Vector2 position, Texture2D baseTexture, Texture2D bulletTexture, Texture2D explosionTexture) :
             base(level,position,baseTexture,texture,bulletTexture,explosionTexture)
         {
-            radius = 5*Container.radiusMax /10;
-            attack = 7 * Container.attackMax / 10 ;
-            price = 500;
+            radius = Container.radiusList[3];
+            attack = Container.attackList[3];
+            price = Container.priceList[3];
             smallestRange=0; 
-            interval =Container.intervalmax /3;
+            interval =2000;
             timer = interval;
         }
 
@@ -49,7 +49,7 @@ namespace TowerDefenseOOP
         public void Draw(SpriteBatch spriteBatch)
         {
             if (IsInRange(target))      //Nếu target nằm trong bán kính thì vẽ
-                spriteBatch.DrawLine(position, target.Center, Color.Red);
+                spriteBatch.DrawLine(position, target.Center, Color.Red,2);
             base.Draw(spriteBatch);
         }
     }
